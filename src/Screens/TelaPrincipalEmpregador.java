@@ -1,11 +1,15 @@
+
 package Screens;
 
-public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
-    public TelaPrincipalCandidato() {
+public class TelaPrincipalEmpregador extends javax.swing.JFrame {
+
+    
+    public TelaPrincipalEmpregador() {
         initComponents();
     }
 
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -15,15 +19,16 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         menPerfil = new javax.swing.JMenu();
         menPerfilVisualizar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        menVagasVisualizar = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        menCandidaturasVisualizar = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Candidato");
+        setTitle("Empregador");
+        setPreferredSize(new java.awt.Dimension(600, 392));
         setResizable(false);
+
+        desktop.setPreferredSize(new java.awt.Dimension(450, 369));
 
         javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
         desktop.setLayout(desktopLayout);
@@ -37,11 +42,6 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         );
 
         menPerfil.setText("Perfil");
-        menPerfil.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menPerfilActionPerformed(evt);
-            }
-        });
 
         menPerfilVisualizar.setText("Visualizar perfil");
         menPerfilVisualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -53,31 +53,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
         jMenuBar1.add(menPerfil);
 
-        jMenu2.setText("Vagas");
-
-        menVagasVisualizar.setText("Visualizar vagas");
-        menVagasVisualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menVagasVisualizarActionPerformed(evt);
-            }
-        });
-        jMenu2.add(menVagasVisualizar);
-
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Candidaturas");
-
-        menCandidaturasVisualizar.setText("Visualizar candidaturas");
-        menCandidaturasVisualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menCandidaturasVisualizarActionPerformed(evt);
-            }
-        });
-        jMenu3.add(menCandidaturasVisualizar);
-
-        jMenuBar1.add(jMenu3);
-
-        jMenu1.setText("Currículo");
+        jMenu2.setText("Vagas abertas");
 
         jMenuItem1.setText("Visualizar ");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -85,9 +61,21 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
                 jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu2.add(jMenuItem1);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Aba dos candidatos");
+
+        jMenuItem2.setText("Visualizar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -101,48 +89,34 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(desktop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(600, 400));
-        setLocationRelativeTo(null);
+        setBounds(0, 0, 600, 392);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilActionPerformed
-        // TODO add your handling code here:
-        TelaPerfilCandidato tela = new TelaPerfilCandidato();
-        tela.setVisible(true);
-        desktop.add(tela);
-    }//GEN-LAST:event_menPerfilActionPerformed
-
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
-        // TODO add your handling code here:
-        TelaPerfilCandidato tela = new TelaPerfilCandidato();
+        // chamando a tela de perfil do empregador
+        TelaPerfilEmpregador tela = new TelaPerfilEmpregador();
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed
 
-    private void menVagasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menVagasVisualizarActionPerformed
-        // TODO add your handling code here:
-        TelaVagas tela = new TelaVagas();
-        tela.setVisible(true);
-        desktop.add(tela);
-    }//GEN-LAST:event_menVagasVisualizarActionPerformed
-
-    private void menCandidaturasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCandidaturasVisualizarActionPerformed
-        // TODO add your handling code here:
-        TelaCandidaturas tela = new TelaCandidaturas();
-        tela.setVisible(true);
-        desktop.add(tela);
-    }//GEN-LAST:event_menCandidaturasVisualizarActionPerformed
-
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        CurriculoCandidato tela = new CurriculoCandidato();
+        // chamando a tela de vagas abertas do empregador
+        TelaVagasEmpregador tela = new TelaVagasEmpregador();
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // chamando a aba de candidatos cadastrados
+        TelaAbaDosCandidatos tela = new TelaAbaDosCandidatos();
+        tela.setVisible(true);
+        desktop.add(tela);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -157,34 +131,32 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaPrincipalEmpregador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaPrincipalEmpregador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaPrincipalEmpregador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaPrincipalEmpregador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaPrincipalCandidato().setVisible(true);
+                new TelaPrincipalEmpregador().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
-    public static javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    public static javax.swing.JMenuItem menCandidaturasVisualizar;
+    public static javax.swing.JMenuItem jMenuItem1;
+    public static javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenu menPerfil;
     public static javax.swing.JMenuItem menPerfilVisualizar;
-    public static javax.swing.JMenuItem menVagasVisualizar;
     // End of variables declaration//GEN-END:variables
 }
