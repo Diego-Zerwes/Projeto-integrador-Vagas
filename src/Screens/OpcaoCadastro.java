@@ -15,8 +15,8 @@ public class OpcaoCadastro extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnOpcaoCandidato = new javax.swing.JButton();
+        btnOpcaoEmpregador = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -24,17 +24,17 @@ public class OpcaoCadastro extends javax.swing.JFrame {
 
         jLabel1.setText("Como deseja se cadastrar?");
 
-        jButton1.setText("Candidato");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnOpcaoCandidato.setText("Candidato");
+        btnOpcaoCandidato.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnOpcaoCandidatoActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Empregador");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnOpcaoEmpregador.setText("Empregador");
+        btnOpcaoEmpregador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnOpcaoEmpregadorActionPerformed(evt);
             }
         });
 
@@ -50,9 +50,9 @@ public class OpcaoCadastro extends javax.swing.JFrame {
                 .addComponent(jLabel1))
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jButton1)
+                .addComponent(btnOpcaoCandidato)
                 .addGap(56, 56, 56)
-                .addComponent(jButton2))
+                .addComponent(btnOpcaoEmpregador))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -62,8 +62,8 @@ public class OpcaoCadastro extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnOpcaoCandidato)
+                    .addComponent(btnOpcaoEmpregador))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
 
@@ -71,20 +71,19 @@ public class OpcaoCadastro extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnOpcaoCandidatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpcaoCandidatoActionPerformed
         // chamando a tela principal do candidato
-        TelaPrincipalCandidato tela = new TelaPrincipalCandidato();
+        TelaCadastroCandidato tela = new TelaCadastroCandidato();
         tela.setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnOpcaoCandidatoActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnOpcaoEmpregadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpcaoEmpregadorActionPerformed
         // chamando a tela principal do empregador
-        TelaPrincipalEmpregador tela = new TelaPrincipalEmpregador();
+        TelaCadastroEmpregador tela = new TelaCadastroEmpregador();
         tela.setVisible(true);
-        this.setVisible(false);
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
+        this.setVisible(false);        
+    }//GEN-LAST:event_btnOpcaoEmpregadorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -122,8 +121,8 @@ public class OpcaoCadastro extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnOpcaoCandidato;
+    private javax.swing.JButton btnOpcaoEmpregador;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
