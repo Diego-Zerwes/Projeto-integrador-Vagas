@@ -20,6 +20,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         menCandidaturasVisualizar = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Candidato");
@@ -29,11 +30,11 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         desktop.setLayout(desktopLayout);
         desktopLayout.setHorizontalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 450, Short.MAX_VALUE)
+            .addGap(0, 730, Short.MAX_VALUE)
         );
         desktopLayout.setVerticalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 369, Short.MAX_VALUE)
+            .addGap(0, 472, Short.MAX_VALUE)
         );
 
         menPerfil.setText("Perfil");
@@ -87,6 +88,14 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem2.setText("Criar novo currículo");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -97,14 +106,14 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(desktop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 150, Short.MAX_VALUE))
+                .addGap(0, 89, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        setSize(new java.awt.Dimension(600, 400));
+        setSize(new java.awt.Dimension(835, 503));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -124,24 +133,31 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menVagasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menVagasVisualizarActionPerformed
         // TODO add your handling code here:
-        TelaVagas tela = new TelaVagas();
+        TelaVagasCandidatoEEmpregador tela = new TelaVagasCandidatoEEmpregador();
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_menVagasVisualizarActionPerformed
 
     private void menCandidaturasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCandidaturasVisualizarActionPerformed
         // TODO add your handling code here:
-        TelaCandidaturas tela = new TelaCandidaturas();
+        TelaCandidaturasCandidato tela = new TelaCandidaturasCandidato();
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_menCandidaturasVisualizarActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        CurriculoCandidato tela = new CurriculoCandidato();
+        TelaCurriculoCandidato tela = new TelaCurriculoCandidato();
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        TelaCriarNovoCurriculoCandidato tela = new TelaCriarNovoCurriculoCandidato();
+        tela.setVisible(true);
+        desktop.add(tela);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -182,6 +198,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     public static javax.swing.JMenuItem menCandidaturasVisualizar;
     private javax.swing.JMenu menPerfil;
     public static javax.swing.JMenuItem menPerfilVisualizar;

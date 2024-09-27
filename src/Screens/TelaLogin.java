@@ -101,7 +101,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         // chamando a tela de opção de cadastro
-        OpcaoCadastro tela = new OpcaoCadastro();
+        TelaOpcaoCadastro tela = new TelaOpcaoCadastro();
         tela.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnCadastrarActionPerformed
@@ -113,8 +113,8 @@ public class TelaLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Banco de dados conectado");
         }catch(Exception ex)
         {
-            JOptionPane.showMessageDialog(null, 
-                    "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnConectarActionPerformed
 
