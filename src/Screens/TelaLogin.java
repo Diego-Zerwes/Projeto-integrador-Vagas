@@ -1,4 +1,3 @@
-
 package Screens;
 
 import javax.swing.JOptionPane;
@@ -6,15 +5,60 @@ import java.sql.*;
 import dao.ConexaoBanco;
 
 public class TelaLogin extends javax.swing.JFrame {
+
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
-    
-    
 
-   
     public TelaLogin() {
         initComponents();
+
+        ConexaoBanco con = new ConexaoBanco();
+        if (con.conectar()) {
+            conexao = con.getConnection();
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados");
+        }
+    }
+
+    public void logar() {
+        String sql = "SELECT * FROM candidato WHERE nome=? and senha=?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtLogin.getText());
+
+            /*
+            Para obter a senha como uma String legível, você deve construir uma String a partir do array                       de caracteres usando o construtor de String, assim:
+
+            java
+            Copiar código
+            String senha = new String(txtSenha.getPassword());
+            Esse construtor aceita o array de caracteres e o converte em uma String legível. Por exemplo:
+
+            java
+            Copiar código
+            char[] passwordArray = {'m', 'y', 's', 'e', 'c', 'r', 'e', 't'};
+            String password = new String(passwordArray);
+            System.out.println(password);  // Saída: mysecret
+             */
+            
+            pst.setString(2, new String(txtSenha.getPassword()));
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                String tipoUsuario = rs.getString(5);
+
+                if (tipoUsuario.equals("candidato")) {
+                    TelaPrincipalCandidato tpc = new TelaPrincipalCandidato();
+                    tpc.setVisible(true);
+                    this.dispose();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não foi possível conectar com o banco" + e.getMessage());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -24,10 +68,10 @@ public class TelaLogin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtLogin = new javax.swing.JTextField();
-        txtSenha = new javax.swing.JTextField();
         btnEntrar = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        txtSenha = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela de Login");
@@ -38,6 +82,11 @@ public class TelaLogin extends javax.swing.JFrame {
         jLabel2.setText("Senha");
 
         btnEntrar.setText("Entrar");
+        btnEntrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntrarActionPerformed(evt);
+            }
+        });
 
         btnCadastrar.setText("Cadastrar");
         btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
@@ -57,15 +106,15 @@ public class TelaLogin extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnEntrar)
                         .addGap(18, 18, 18)
                         .addComponent(btnCadastrar))
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
-                    .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                    .addComponent(txtSenha))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -98,9 +147,11 @@ public class TelaLogin extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
+        // chamando o método logar();
+        logar();
+    }//GEN-LAST:event_btnEntrarActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -140,6 +191,6 @@ public class TelaLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField txtLogin;
-    private javax.swing.JTextField txtSenha;
+    private javax.swing.JPasswordField txtSenha;
     // End of variables declaration//GEN-END:variables
 }

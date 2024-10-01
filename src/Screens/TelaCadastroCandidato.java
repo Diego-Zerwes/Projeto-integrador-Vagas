@@ -32,7 +32,7 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
     }
 
     public void cadastrar() {
-        String sqlCandidato = "INSERT INTO candidato (nome, RG, dataNascimento) VALUES (?,?,?)";
+        String sqlCandidato = "INSERT INTO candidato (nome, RG, dataNascimento, tipoUsuario, senha) VALUES (?,?,?,?,?)";
         String sqlEndereco = "INSERT INTO endereco (rua, estado, cidade, CEP, idCandidato) VALUES (?,?,?,?,?)";
         String sqlContato = "INSERT INTO contato (telefone, celular, email, idCandidato) VALUES (?,?,?,?)";
 
@@ -55,6 +55,8 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
             Date dataNascimento = formatoEntrada.parse(dataDeNascimentoTexto);
             String dataFormatada = formatoBanco.format(dataNascimento);
             pstCandidato.setString(3, dataFormatada);
+            pstCandidato.setString(4, "candidato");
+            pstCandidato.setString(5, txtSenha.getText());
 
             int candidatoCadastrado = pstCandidato.executeUpdate();
 
@@ -119,6 +121,7 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
         txtTel.setText("");
         txtCel.setText("");
         txtEmail.setText("");
+        txtSenha.setText("");
         txtNome.requestFocus();
     }
 
@@ -152,6 +155,8 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
         btnCadastrar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        txtSenha = new javax.swing.JTextField();
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -230,25 +235,22 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
 
         jLabel12.setText("* Campos obrigatórios");
 
+        jLabel13.setText("*Senha");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(95, 95, 95)
-                .addComponent(jLabel12)
-                .addGap(45, 45, 45))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(95, 95, 95)
+                        .addComponent(jLabel12)
+                        .addGap(45, 45, 45))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(440, 440, 440)
-                        .addComponent(btnCancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                        .addComponent(btnCadastrar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
@@ -258,18 +260,17 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(jLabel9)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel11))
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel13))
                         .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtSenha)
                             .addComponent(txtNome)
                             .addComponent(txtRua)
                             .addComponent(txtCidade)
                             .addComponent(txtTel)
                             .addComponent(txtCel)
                             .addComponent(txtEmail)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtCep, javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,8 +278,17 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtDatNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(29, 29, 29))
+                                .addComponent(txtDatNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(29, 29, 29))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(470, 470, 470)
+                .addComponent(btnCancelar)
+                .addGap(18, 18, 18)
+                .addComponent(btnCadastrar)
+                .addGap(0, 29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,11 +335,15 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnCadastrar))
-                .addGap(118, 118, 118))
+                    .addComponent(jLabel13)
+                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCadastrar)
+                    .addComponent(btnCancelar))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(716, 503));
@@ -395,6 +409,7 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -414,6 +429,7 @@ public class TelaCadastroCandidato extends javax.swing.JFrame {
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtRg;
     private javax.swing.JTextField txtRua;
+    private javax.swing.JTextField txtSenha;
     private javax.swing.JTextField txtTel;
     // End of variables declaration//GEN-END:variables
 }
