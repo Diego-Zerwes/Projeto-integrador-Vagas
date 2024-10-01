@@ -11,7 +11,7 @@ public class ConexaoBanco {
     private Connection conexao; 
 //Construtor
     public ConexaoBanco() {
-        this.servidor = "200.195.171.122";
+        this.servidor = "200.195.171.124";
         this.banco = "grupo07";
         this.usuario = "grupo07";
         this.senha = "Vu9EIaowZuJ3mBsP";

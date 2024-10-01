@@ -2,9 +2,15 @@
 package Screens;
 
 import javax.swing.JOptionPane;
-
+import java.sql.*;
+import dao.ConexaoBanco;
 
 public class TelaLogin extends javax.swing.JFrame {
+    Connection conexao = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    
+    
 
    
     public TelaLogin() {
@@ -22,7 +28,6 @@ public class TelaLogin extends javax.swing.JFrame {
         btnEntrar = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        btnConectar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela de Login");
@@ -43,13 +48,6 @@ public class TelaLogin extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/technos.png"))); // NOI18N
 
-        btnConectar.setText("Conectar");
-        btnConectar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConectarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -58,21 +56,16 @@ public class TelaLogin extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnEntrar)
                         .addGap(18, 18, 18)
-                        .addComponent(btnCadastrar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnConectar)))
+                        .addComponent(btnCadastrar))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -90,8 +83,7 @@ public class TelaLogin extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEntrar)
-                    .addComponent(btnCadastrar)
-                    .addComponent(btnConectar))
+                    .addComponent(btnCadastrar))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -105,18 +97,6 @@ public class TelaLogin extends javax.swing.JFrame {
         tela.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnCadastrarActionPerformed
-
-    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        // conectando com o banco
-        try {
-            new dao.ConexaoBanco().conectar();
-            JOptionPane.showMessageDialog(null, "Banco de dados conectado");
-        }catch(Exception ex)
-        {
-            JOptionPane.showMessageDialog(null,
-                "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnConectarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,7 +135,6 @@ public class TelaLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
-    private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnEntrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
