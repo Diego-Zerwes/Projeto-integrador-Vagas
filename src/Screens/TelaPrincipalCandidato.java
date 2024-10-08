@@ -1,5 +1,9 @@
 package Screens;
 
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class TelaPrincipalCandidato extends javax.swing.JFrame {
     
     private String loginUsuario;
@@ -137,7 +141,12 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
         // Passa o login armazenado para a TelaPerfilCandidato
-        TelaPerfilCandidato tela = new TelaPerfilCandidato(this.getLoginUsuario());
+        TelaPerfilCandidato tela = null;
+        try {
+            tela = new TelaPerfilCandidato(this.getLoginUsuario());
+        } catch (ParseException ex) {
+            Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(Level.SEVERE, null, ex);
+        }
         desktop.add(tela);
         tela.setVisible(true);
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed

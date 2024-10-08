@@ -1,8 +1,17 @@
 package Screens;
 
+import br.com.parg.viacep.ViaCEP;
+import br.com.parg.viacep.ViaCEPException;
 import dao.ConexaoBanco;
 import java.sql.*;
+import java.text.ParseException;
+
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
 public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
 
@@ -21,7 +30,7 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
     }
 
     // Construtor que recebe o login como parâmetro
-    public TelaPerfilCandidato(String loginUsuario) {
+    public TelaPerfilCandidato(String loginUsuario) throws ParseException {
         initComponents();
         this.loginUsuario = loginUsuario;
 
@@ -35,7 +44,7 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
     }
 
     // Método para buscar os dados do usuário e preencher os textfields
-    public void plotar_dados() {
+    public void plotar_dados() throws ParseException {
         String sqlCandidato = "SELECT idCandidato, nome, RG, dataNascimento FROM candidato WHERE nome = ?";
         String sqlEndereco = "SELECT rua, estado, cidade, CEP FROM endereco WHERE idCandidato = ?";
         String sqlContato = "SELECT telefone, celular, email FROM contato WHERE idCandidato = ?";
@@ -50,12 +59,23 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
                 txtIdCandidato.setText(rsCandidato.getString("idCandidato"));
                 txtNome.setText(rsCandidato.getString("nome"));
                 txtRg.setText(rsCandidato.getString("RG"));
-                txtDatNasc.setText(rsCandidato.getString("dataNascimento"));
+
+                // Formatar a data de nascimento
+                String dataNascimentoBanco = rsCandidato.getString("dataNascimento");
+                SimpleDateFormat formatoBanco = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat formatoSaida = new SimpleDateFormat("dd/MM/yyyy");
+
+                // Converter o formato da data de String para java.util.Date
+                java.util.Date dataNascimento = formatoBanco.parse(dataNascimentoBanco);
+
+                // Utilizar a formatação correta para exibir a data
+                String dataFormatada = formatoSaida.format(dataNascimento);
+                txtDatNasc.setText(dataFormatada);
 
                 pstEndereco = conexao.prepareStatement(sqlEndereco);;
                 pstEndereco.setString(1, txtIdCandidato.getText());;
                 rsEndereco = pstEndereco.executeQuery();
-                
+
                 pstContato = conexao.prepareStatement(sqlContato);;
                 pstContato.setString(1, txtIdCandidato.getText());;
                 rsContato = pstContato.executeQuery();
@@ -65,33 +85,88 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
                     txtEstado.setText(rsEndereco.getString("estado"));
                     txtCidade.setText(rsEndereco.getString("cidade"));
                     txtCep.setText(rsEndereco.getString("CEP"));
-                    
+
                     txtTelefone.setText(rsContato.getString("telefone"));
                     txtCelular.setText(rsContato.getString("celular"));
                     txtEmail.setText(rsContato.getString("email"));
                 } else {
                     JOptionPane.showMessageDialog(null, "Endereço não encontrado!");
                 }
-
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário não encontrado!");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao buscar os dados: " + ex.getMessage());
-        } finally {
-            try {
-                if (rsCandidato != null) {
-                    rsCandidato.close();
-                }
-                if (pstCandidato != null) {
-                    pstCandidato.close();
-                }
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + ex.getMessage());
+        }
+    }
+
+    public void editar() {
+        txtNome.setEnabled(true);
+        txtRg.setEnabled(true);
+        txtDatNasc.setEnabled(true);       
+        txtCep.setEnabled(true);
+        txtTelefone.setEnabled(true);
+        txtCelular.setEnabled(true);
+        txtEmail.setEnabled(true);
+    }
+
+    public void limpar_campos() {
+        txtNome.setEnabled(false);
+        txtRg.setEnabled(false);
+        txtDatNasc.setEnabled(false);        
+        txtCep.setEnabled(false);
+        txtTelefone.setEnabled(false);
+        txtCelular.setEnabled(false);
+        txtEmail.setEnabled(false);
+    }
+
+    public void salvar() throws ParseException {
+        String sql = "UPDATE candidato AS c "
+                + "INNER JOIN endereco AS e ON c.idCandidato = e.idCandidato "
+                + "INNER JOIN contato as ct ON c.idCandidato = ct.idCandidato "
+                + "SET c.nome = ?, c.RG = ?, c.dataNascimento = ?, "
+                + "    e.rua = ?, e.estado = ?, e.cidade = ?, e.CEP = ?, "
+                + "    ct.telefone = ?, ct.celular = ?, ct.email = ? "
+                + "WHERE c.idCandidato = ?";
+
+        try {
+            pstCandidato = conexao.prepareStatement(sql);
+
+            pstCandidato.setString(1, txtNome.getText());
+            pstCandidato.setString(2, txtRg.getText());
+
+            String dataTexto = txtDatNasc.getText();
+            SimpleDateFormat formatoEntrada = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatoBanco = new SimpleDateFormat("yyyy-MM-dd");
+
+            // Converter a data do formato "dd/MM/yyyy" para "yyyy-MM-dd"
+            java.util.Date dataNascimento = formatoEntrada.parse(dataTexto);
+            String dataFormatada = formatoBanco.format(dataNascimento);
+
+            // Converter java.util.Date para java.sql.Date
+            java.sql.Date dataSQL = java.sql.Date.valueOf(dataFormatada);
+            pstCandidato.setDate(3, dataSQL); // Passar o valor formatado como java.sql.Date
+
+            pstCandidato.setString(4, txtRua.getText());
+            pstCandidato.setString(5, txtEstado.getText());
+            pstCandidato.setString(6, txtCidade.getText());
+            pstCandidato.setString(7, txtCep.getText());
+
+            pstCandidato.setString(8, txtTelefone.getText());
+            pstCandidato.setString(9, txtCelular.getText());
+            pstCandidato.setString(10, txtEmail.getText());
+
+            pstCandidato.setString(11, txtIdCandidato.getText());
+            int linhasAtualizada = pstCandidato.executeUpdate();
+
+            if (linhasAtualizada > 0) {
+                limpar_campos();
+                JOptionPane.showMessageDialog(null, "Dados atualizados com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Falha na atualização dos dados!");
             }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao salvar os dados: " + e.getMessage());
         }
     }
 
@@ -118,8 +193,8 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
         txtCelular = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
         txtDatNasc = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         txtIdCandidato = new javax.swing.JTextField();
@@ -132,33 +207,67 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Nome");
 
-        jLabel2.setText("Data Nascimento");
+        txtNome.setEnabled(false);
+
+        jLabel2.setText("Data Nascimento (dd/mm/aaaa)");
+
+        txtRg.setEnabled(false);
 
         jLabel3.setText("RG");
 
         jLabel4.setText("Rua");
 
+        txtRua.setEnabled(false);
+
         jLabel5.setText("Estado");
+
+        txtEstado.setEnabled(false);
 
         jLabel6.setText("Cidade");
 
+        txtCidade.setEnabled(false);
+
         jLabel7.setText("CEP");
 
+        txtCep.setEnabled(false);
         txtCep.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCepActionPerformed(evt);
             }
         });
+        txtCep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCepKeyPressed(evt);
+            }
+        });
 
         jLabel8.setText("Tefone");
 
+        txtTelefone.setEnabled(false);
+
         jLabel9.setText("Celular");
+
+        txtCelular.setEnabled(false);
 
         jLabel10.setText("Email");
 
-        jButton1.setText("Editar");
+        txtEmail.setEnabled(false);
 
-        jButton2.setText("Excluir");
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+
+        txtDatNasc.setEnabled(false);
 
         jLabel11.setText("IdCandidato");
 
@@ -168,69 +277,63 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel3))
-                                        .addGap(24, 24, 24))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addComponent(jLabel7))
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel6)
-                                                .addComponent(jLabel5)))
-                                        .addGap(18, 18, 18))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(28, 28, 28))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(20, 20, 20))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel8))
-                                .addGap(18, 18, 18)))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtEstado)
-                            .addComponent(txtRua)
-                            .addComponent(txtNome)
-                            .addComponent(txtCelular)
-                            .addComponent(txtEmail)
+                            .addComponent(txtCidade)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel4))
+                        .addGap(56, 56, 56)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCep)
+                            .addComponent(txtRua)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtCidade)
-                                    .addComponent(txtCep)
-                                    .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtRg, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDatNasc)))))
-                .addGap(117, 117, 117))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtIdCandidato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btnEditar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSalvar))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel11)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txtIdCandidato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel1))
+                                    .addGap(44, 44, 44)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(txtRg, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txtDatNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel8)
+                                        .addComponent(jLabel9))
+                                    .addGap(40, 40, 40)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtCelular, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+                                        .addComponent(txtTelefone)))))))
+                .addGap(131, 131, 131))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,39 +342,39 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
                     .addComponent(jLabel11)
                     .addComponent(txtIdCandidato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                            .addComponent(txtRg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDatNasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtRg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtDatNasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
-                                .addGap(8, 8, 8)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(txtRua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(txtCep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtCep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addGap(16, 16, 16)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(txtRua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
@@ -281,10 +384,10 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
                             .addComponent(txtCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(btnSalvar)
+                    .addComponent(btnEditar))
                 .addContainerGap(108, Short.MAX_VALUE))
         );
 
@@ -295,10 +398,41 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCepActionPerformed
 
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        // chamando o método editar()
+        editar();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+
+        try {
+            // chamando o método salvar()
+            salvar();
+        } catch (ParseException ex) {
+            Logger.getLogger(TelaPerfilCandidato.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void txtCepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCepKeyPressed
+        // TODO add your handling code here:
+        if (evt.getExtendedKeyCode() == evt.VK_ENTER) {
+            ViaCEP viaCep = new ViaCEP();
+            try {
+                viaCep.buscar(txtCep.getText());
+                txtRua.setText(viaCep.getLogradouro());
+                txtEstado.setText(viaCep.getUf());
+                txtCidade.setText(viaCep.getLocalidade());
+            } catch (ViaCEPException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_txtCepKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnSalvar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
