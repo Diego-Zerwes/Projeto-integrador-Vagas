@@ -1,9 +1,23 @@
 package Screens;
 
 public class TelaPrincipalCandidato extends javax.swing.JFrame {
-
+    
+    private String loginUsuario;
+    
+    //construtor padrão
     public TelaPrincipalCandidato() {
         initComponents();
+    }
+    
+    // Novo construtor que recebe o login
+    public TelaPrincipalCandidato(String loginUsuario) {
+        initComponents();
+        this.loginUsuario = loginUsuario;
+    }
+    
+     // Getter para retornar o login do usuário
+    public String getLoginUsuario() {
+        return loginUsuario;
     }
 
     @SuppressWarnings("unchecked")
@@ -118,17 +132,14 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilActionPerformed
-        // TODO add your handling code here:
-        TelaPerfilCandidato tela = new TelaPerfilCandidato();
-        tela.setVisible(true);
-        desktop.add(tela);
+        // TODO add your handling code here:        
     }//GEN-LAST:event_menPerfilActionPerformed
 
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
-        // TODO add your handling code here:
-        TelaPerfilCandidato tela = new TelaPerfilCandidato();
-        tela.setVisible(true);
+        // Passa o login armazenado para a TelaPerfilCandidato
+        TelaPerfilCandidato tela = new TelaPerfilCandidato(this.getLoginUsuario());
         desktop.add(tela);
+        tela.setVisible(true);
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed
 
     private void menVagasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menVagasVisualizarActionPerformed

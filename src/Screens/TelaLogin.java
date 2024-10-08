@@ -49,7 +49,7 @@ public class TelaLogin extends javax.swing.JFrame {
                 String tipoUsuario = rs.getString(5);
 
                 if (tipoUsuario.equals("candidato")) {
-                    TelaPrincipalCandidato tpc = new TelaPrincipalCandidato();
+                    TelaPrincipalCandidato tpc = new TelaPrincipalCandidato(txtLogin.getText());
                     tpc.setVisible(true);
                     this.dispose();
                 }
