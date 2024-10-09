@@ -153,7 +153,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menVagasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menVagasVisualizarActionPerformed
         // TODO add your handling code here:
-        TelaVagasCandidatoEEmpregador tela = new TelaVagasCandidatoEEmpregador();
+        TelaVagasCandidato tela = new TelaVagasCandidato();
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_menVagasVisualizarActionPerformed
