@@ -143,10 +143,8 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // chamando a aba de visualizar todas as vagas em geral
-        TelaVagasCandidato tela = new TelaVagasCandidato();
-        tela.setVisible(true);
-        desktop.add(tela);
+        // chamando a aba de visualizar todas as vagas do empregador
+       
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     

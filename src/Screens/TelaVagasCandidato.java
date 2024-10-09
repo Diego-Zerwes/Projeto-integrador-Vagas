@@ -1,5 +1,5 @@
-
 package Screens;
+
 import dao.ConexaoBanco;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -7,36 +7,65 @@ import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 public class TelaVagasCandidato extends javax.swing.JInternalFrame {
+
+    private String loginUsuario = null;
+
     Connection conexao = null;
-    PreparedStatement pst = null;    
-    ResultSet rs = null;
-    
-    public TelaVagasCandidato() {
+    PreparedStatement pstVagas = null;
+    PreparedStatement pstCandidato = null;
+    ResultSet rsVagas = null;
+    ResultSet rsCandidato = null;
+
+    public TelaVagasCandidato(String loginUsuario) {
         initComponents();
+        this.loginUsuario = loginUsuario;
+
         ConexaoBanco con = new ConexaoBanco();
-        if(con.conectar()) {
+        if (con.conectar()) {
             conexao = con.getConnection();
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }
     }
-    
+
     public void pesquisar_vaga() {
         String sql = "SELECT * FROM Vagas WHERE descricao like ?";
         try {
-            pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtPesquisarVaga.getText() + "%");
-            rs = pst.executeQuery();
-            tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
+            pstVagas = conexao.prepareStatement(sql);
+            pstVagas.setString(1, txtPesquisarVaga.getText() + "%");
+            rsVagas = pstVagas.executeQuery();
+            tblVagas.setModel(DbUtils.resultSetToTableModel(rsVagas));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
+    /*
     public void candidatar() {
-        String sql = "INSERT INTO Vagas ";
-    }    
-    
+        //String sqlCandidato = "SELECT c.idCandidato from candidato c WHERE c.nome = ?";
+        String sqlVagas = "UPDATE Vagas SET idCandidato = ? WHERE idVagas = ? AND idCandidato IS NULL";
+        String sqlCandidato = "SELECT c.idCandidato FROM candidato c WHERE c.nome = ?";
+        int linhaSelecionada = tblVagas.getSelectedRow();
+        //JOptionPane.showMessageDialog(null, linhaSelecionada);
+        if (linhaSelecionada >= 0) {
+            String idVaga = tblVagas.getValueAt(linhaSelecionada, 0).toString();
+            //System.out.println(idVaga);
+            try {
+                pstCandidato = conexao.prepareStatement(sqlCandidato);
+                pstCandidato.setString(1, loginUsuario);
+                rsCandidato = pstCandidato.executeQuery();
+                ResultSet idCandidato;
+                idCandidato = (String) rsCandidato;
+                if (rsCandidato.next()) {
+                    pstVagas = conexao.prepareStatement(sqlVagas);
+                    pstVagas.setString(1, idCandidato);
+                }
+
+            } catch (Exception e) {
+            }
+
+        }
+    }
+    */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -56,13 +85,13 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
         tblVagas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Id", "Descrição", "Salário", "Requisitos"
+                "Id", "Descrição", "Salário", "Requisitos", "idCandidato"
             }
         ));
         tblVagas.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -91,6 +120,11 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
         btnCandidatar.setText("Candidatar");
         btnCandidatar.setEnabled(false);
+        btnCandidatar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCandidatarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -145,6 +179,11 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
         btnCancelarCandidatura.setEnabled(true);
         btnCandidatar.setEnabled(true);
     }//GEN-LAST:event_tblVagasMouseClicked
+
+    private void btnCandidatarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCandidatarActionPerformed
+        // chamado o método candidatar
+        //candidatar();
+    }//GEN-LAST:event_btnCandidatarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
