@@ -13,17 +13,6 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         initComponents();
     }
     
-    // Novo construtor que recebe o login
-    public TelaPrincipalCandidato(String loginUsuario) {
-        initComponents();
-        this.loginUsuario = loginUsuario;
-    }
-    
-     // Getter para retornar o login do usuário
-    public String getLoginUsuario() {
-        return loginUsuario;
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -141,12 +130,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
         // Passa o login armazenado para a TelaPerfilCandidato
-        TelaPerfilCandidato tela = null;
-        try {
-            tela = new TelaPerfilCandidato(this.getLoginUsuario());
-        } catch (ParseException ex) {
-            Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        TelaPerfilCandidato tela = null;        
         desktop.add(tela);
         tela.setVisible(true);
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed

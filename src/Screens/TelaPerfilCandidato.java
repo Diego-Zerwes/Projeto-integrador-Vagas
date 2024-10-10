@@ -18,87 +18,12 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
     private String loginUsuario; // Variável para armazenar o login do usuário
 
     Connection conexao = null;
-    PreparedStatement pstCandidato = null;
-    PreparedStatement pstEndereco = null;
-    PreparedStatement pstContato = null;
-    ResultSet rsCandidato = null;
-    ResultSet rsEndereco = null;
-    ResultSet rsContato = null;
-
+    PreparedStatement pst = null;   
+    ResultSet rs = null;
+    
     public TelaPerfilCandidato() {
         initComponents();
-    }
-
-    // Construtor que recebe o login como parâmetro
-    public TelaPerfilCandidato(String loginUsuario) throws ParseException {
-        initComponents();
-        this.loginUsuario = loginUsuario;
-
-        ConexaoBanco con = new ConexaoBanco();
-        if (con.conectar()) {
-            conexao = con.getConnection();
-            plotar_dados(); // Chama o método para carregar os dados do usuário
-        } else {
-            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados");
-        }
-    }
-
-    // Método para buscar os dados do usuário e preencher os textfields
-    public void plotar_dados() throws ParseException {
-        String sqlCandidato = "SELECT idCandidato, nome, RG, dataNascimento FROM candidato WHERE nome = ?";
-        String sqlEndereco = "SELECT rua, estado, cidade, CEP FROM endereco WHERE idCandidato = ?";
-        String sqlContato = "SELECT telefone, celular, email FROM contato WHERE idCandidato = ?";
-        try {
-            pstCandidato = conexao.prepareStatement(sqlCandidato);
-            pstCandidato.setString(1, loginUsuario); // Passa o login como parâmetro para a consulta
-            rsCandidato = pstCandidato.executeQuery();
-            //ResultSet rsIdCandidato = pstCandidato.getGeneratedKeys();
-
-            if (rsCandidato.next()) {
-                // Preenche os campos com os dados do usuário                
-                txtIdCandidato.setText(rsCandidato.getString("idCandidato"));
-                txtNome.setText(rsCandidato.getString("nome"));
-                txtRg.setText(rsCandidato.getString("RG"));
-
-                // Formatar a data de nascimento
-                String dataNascimentoBanco = rsCandidato.getString("dataNascimento");
-                SimpleDateFormat formatoBanco = new SimpleDateFormat("yyyy-MM-dd");
-                SimpleDateFormat formatoSaida = new SimpleDateFormat("dd/MM/yyyy");
-
-                // Converter o formato da data de String para java.util.Date
-                java.util.Date dataNascimento = formatoBanco.parse(dataNascimentoBanco);
-
-                // Utilizar a formatação correta para exibir a data
-                String dataFormatada = formatoSaida.format(dataNascimento);
-                txtDatNasc.setText(dataFormatada);
-
-                pstEndereco = conexao.prepareStatement(sqlEndereco);;
-                pstEndereco.setString(1, txtIdCandidato.getText());;
-                rsEndereco = pstEndereco.executeQuery();
-
-                pstContato = conexao.prepareStatement(sqlContato);;
-                pstContato.setString(1, txtIdCandidato.getText());;
-                rsContato = pstContato.executeQuery();
-
-                if (rsEndereco.next() && rsContato.next()) {
-                    txtRua.setText(rsEndereco.getString("rua"));
-                    txtEstado.setText(rsEndereco.getString("estado"));
-                    txtCidade.setText(rsEndereco.getString("cidade"));
-                    txtCep.setText(rsEndereco.getString("CEP"));
-
-                    txtTelefone.setText(rsContato.getString("telefone"));
-                    txtCelular.setText(rsContato.getString("celular"));
-                    txtEmail.setText(rsContato.getString("email"));
-                } else {
-                    JOptionPane.showMessageDialog(null, "Endereço não encontrado!");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Usuário não encontrado!");
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao buscar os dados: " + ex.getMessage());
-        }
-    }
+    }      
 
     public void editar() {
         txtNome.setEnabled(true);
@@ -119,57 +44,7 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
         txtCelular.setEnabled(false);
         txtEmail.setEnabled(false);
     }
-
-    public void salvar() throws ParseException {
-        String sql = "UPDATE candidato AS c "
-                + "INNER JOIN endereco AS e ON c.idCandidato = e.idCandidato "
-                + "INNER JOIN contato as ct ON c.idCandidato = ct.idCandidato "
-                + "SET c.nome = ?, c.RG = ?, c.dataNascimento = ?, "
-                + "    e.rua = ?, e.estado = ?, e.cidade = ?, e.CEP = ?, "
-                + "    ct.telefone = ?, ct.celular = ?, ct.email = ? "
-                + "WHERE c.idCandidato = ?";
-
-        try {
-            pstCandidato = conexao.prepareStatement(sql);
-
-            pstCandidato.setString(1, txtNome.getText());
-            pstCandidato.setString(2, txtRg.getText());
-
-            String dataTexto = txtDatNasc.getText();
-            SimpleDateFormat formatoEntrada = new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat formatoBanco = new SimpleDateFormat("yyyy-MM-dd");
-
-            // Converter a data do formato "dd/MM/yyyy" para "yyyy-MM-dd"
-            java.util.Date dataNascimento = formatoEntrada.parse(dataTexto);
-            String dataFormatada = formatoBanco.format(dataNascimento);
-
-            // Converter java.util.Date para java.sql.Date
-            java.sql.Date dataSQL = java.sql.Date.valueOf(dataFormatada);
-            pstCandidato.setDate(3, dataSQL); // Passar o valor formatado como java.sql.Date
-
-            pstCandidato.setString(4, txtRua.getText());
-            pstCandidato.setString(5, txtEstado.getText());
-            pstCandidato.setString(6, txtCidade.getText());
-            pstCandidato.setString(7, txtCep.getText());
-
-            pstCandidato.setString(8, txtTelefone.getText());
-            pstCandidato.setString(9, txtCelular.getText());
-            pstCandidato.setString(10, txtEmail.getText());
-
-            pstCandidato.setString(11, txtIdCandidato.getText());
-            int linhasAtualizada = pstCandidato.executeUpdate();
-
-            if (linhasAtualizada > 0) {
-                limpar_campos();
-                JOptionPane.showMessageDialog(null, "Dados atualizados com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Falha na atualização dos dados!");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao salvar os dados: " + e.getMessage());
-        }
-    }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -404,13 +279,7 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-
-        try {
-            // chamando o método salvar()
-            salvar();
-        } catch (ParseException ex) {
-            Logger.getLogger(TelaPerfilCandidato.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void txtCepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCepKeyPressed

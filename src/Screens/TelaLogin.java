@@ -5,7 +5,7 @@ import java.sql.*;
 import dao.ConexaoBanco;
 
 public class TelaLogin extends javax.swing.JFrame {
-    //public String idCandidato = null;
+    
             
     Connection conexao = null;
     PreparedStatement pst = null;
@@ -23,44 +23,7 @@ public class TelaLogin extends javax.swing.JFrame {
     }
 
     public void logar() {
-        String sql = "SELECT * FROM candidato WHERE nome=? and senha=?";
-        try {
-            pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtLogin.getText());
-
-            /*
-            Para obter a senha como uma String legível, você deve construir uma String a partir do array                       de caracteres usando o construtor de String, assim:
-
-            java
-            Copiar código
-            String senha = new String(txtSenha.getPassword());
-            Esse construtor aceita o array de caracteres e o converte em uma String legível. Por exemplo:
-
-            java
-            Copiar código
-            char[] passwordArray = {'m', 'y', 's', 'e', 'c', 'r', 'e', 't'};
-            String password = new String(passwordArray);
-            System.out.println(password);  // Saída: mysecret
-             */
-            
-            pst.setString(2, new String(txtSenha.getPassword()));
-            rs = pst.executeQuery();
-
-            if (rs.next()) {
-                //idCandidato = rs.getString("idCandidato");
-                String tipoUsuario = rs.getString(5);
-
-                if (tipoUsuario.equals("candidato")) {
-                    TelaPrincipalCandidato tpc = new TelaPrincipalCandidato(txtLogin.getText());
-                    tpc.setVisible(true);
-                    this.dispose();
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Não foi possível conectar com o banco" + e.getMessage());
-        }
+        
     }
 
     @SuppressWarnings("unchecked")
