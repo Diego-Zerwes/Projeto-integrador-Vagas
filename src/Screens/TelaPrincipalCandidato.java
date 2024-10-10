@@ -130,7 +130,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
         // Passa o login armazenado para a TelaPerfilCandidato
-        TelaPerfilCandidato tela = null;        
+        TelaPerfilCandidato tela = new TelaPerfilCandidato();        
         desktop.add(tela);
         tela.setVisible(true);
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed

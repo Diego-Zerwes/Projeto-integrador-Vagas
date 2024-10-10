@@ -31,19 +31,16 @@
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtLogin" pref="248" max="32767" attributes="0"/>
-                      <Component id="txtSenha" max="32767" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtLogin" alignment="0" pref="248" max="32767" attributes="0"/>
+                  <Component id="txtSenha" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="txtIdCandidato" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnEntrar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnCadastrar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -66,7 +63,6 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnEntrar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCadastrar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtIdCandidato" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="16" max="32767" attributes="0"/>
           </Group>
@@ -110,11 +106,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtSenha">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtIdCandidato">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="id:"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>
