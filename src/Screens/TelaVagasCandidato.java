@@ -1,6 +1,7 @@
 package Screens;
 
 import dao.ConexaoBanco;
+import entities.Candidato;
 import java.sql.*;
 import javax.swing.JOptionPane;
 //a linha abaixo importa recursos da biblioteca rs2xml.jar
@@ -8,16 +9,33 @@ import net.proteanit.sql.DbUtils;
 
 public class TelaVagasCandidato extends javax.swing.JInternalFrame {
     
+    Candidato candidato = new Candidato();
+    
     Connection conexao = null;    
+    PreparedStatement pst = null;
+    ResultSet rs = null;
 
-    public TelaVagasCandidato(String loginUsuario) {
+    public TelaVagasCandidato(Candidato candidato) {
         initComponents();
+        this.candidato = candidato;
 
         ConexaoBanco con = new ConexaoBanco();
         if (con.conectar()) {
             conexao = con.getConnection();
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
+        }
+    }
+    
+    public void pesquisar_vaga() {
+        String sql = "SELECT * FROM Vagas WHERE descricao like ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtPesquisarVaga.getText() + "%");
+            rs = pst.executeQuery();
+            tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
     
@@ -126,7 +144,7 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
     private void txtPesquisarVagaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarVagaKeyReleased
         // chamando o método pesquisar_vaga;
-        
+        pesquisar_vaga();
     }//GEN-LAST:event_txtPesquisarVagaKeyReleased
 
     private void tblVagasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVagasMouseClicked

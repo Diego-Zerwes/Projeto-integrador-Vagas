@@ -143,10 +143,10 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed
 
     private void menVagasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menVagasVisualizarActionPerformed
-        // TODO add your handling code here:
-//        TelaVagasCandidato tela = new TelaVagasCandidato();
-//        tela.setVisible(true);
-//        desktop.add(tela);
+        //TODO add your handling code here:
+        TelaVagasCandidato tela = new TelaVagasCandidato(candidato);
+        tela.setVisible(true);
+        desktop.add(tela);
     }//GEN-LAST:event_menVagasVisualizarActionPerformed
 
     private void menCandidaturasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCandidaturasVisualizarActionPerformed
