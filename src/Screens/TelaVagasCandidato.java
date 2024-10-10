@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 public class TelaVagasCandidato extends javax.swing.JInternalFrame {
-    
+
     Candidato candidato = new Candidato();
-    
-    Connection conexao = null;    
+
+    Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
 
@@ -26,19 +26,48 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }
     }
-    
+
     public void pesquisar_vaga() {
-        String sql = "SELECT * FROM Vagas WHERE descricao like ?";
+        String sql = "SELECT idVagas AS Id, descricao AS Descricão, remuneracao AS Remuneracão, requisitos AS Requisitos, idEmpregador FROM Vagas WHERE descricao like ?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtPesquisarVaga.getText() + "%");
             rs = pst.executeQuery();
             tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar as vagas!" + e.getMessage());
         }
     }
-    
+
+    public void candidatar() {
+        String sql = "UPDATE Vagas SET idCandidato=? WHERE idVagas=? AND idCandidato IS NULL";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, candidato.getIdCandidato());
+            int linhaSelecionada = tblVagas.getSelectedRow();
+
+            if (linhaSelecionada >= 0) {
+                Object idVagaObj = tblVagas.getModel().getValueAt(linhaSelecionada, 0);
+
+                if (idVagaObj != null && idVagaObj.toString().matches("\\d+")) {
+                    int idVaga = Integer.parseInt(idVagaObj.toString());
+                    pst.setInt(2, idVaga);
+
+                    int linhasAtualizadas = pst.executeUpdate();
+                    if (linhasAtualizadas > 0) {
+                        JOptionPane.showMessageDialog(null, "Cadastrado com sucesso!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cadastrado não realizado!");
+                        
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao se candidatar à vaga!" + e.getMessage());
+
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -64,7 +93,7 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Id", "Descrição", "Salário", "Requisitos", "idCandidato"
+                "Id", "Descrição", "Salário", "Requisitos", "idEmpregador"
             }
         ));
         tblVagas.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -155,7 +184,7 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
     private void btnCandidatarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCandidatarActionPerformed
         // chamado o método candidatar
-        //candidatar();
+        candidatar();
     }//GEN-LAST:event_btnCandidatarActionPerformed
 
 

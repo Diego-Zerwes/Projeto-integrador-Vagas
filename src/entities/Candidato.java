@@ -74,6 +74,5 @@ public class Candidato {
            System.out.println("Ocorreu um erro ao conectar com o banco! " + e.getMessage());
        }
        return false;
-    }
-    
+    }    
 }
