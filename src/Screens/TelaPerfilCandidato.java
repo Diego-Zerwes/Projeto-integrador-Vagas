@@ -3,6 +3,7 @@ package Screens;
 import br.com.parg.viacep.ViaCEP;
 import br.com.parg.viacep.ViaCEPException;
 import dao.ConexaoBanco;
+import entities.Candidato;
 import java.sql.*;
 import java.text.ParseException;
 
@@ -15,20 +16,89 @@ import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
 public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
 
-    private String loginUsuario; // Variável para armazenar o login do usuário
+    private Candidato candidato;
 
     Connection conexao = null;
-    PreparedStatement pst = null;   
-    ResultSet rs = null;
-    
-    public TelaPerfilCandidato() {
+    PreparedStatement pstCandidato = null;
+    PreparedStatement pstEndereco = null;
+    PreparedStatement pstContato = null;
+    ResultSet rsCandidato = null;
+    ResultSet rsEndereco = null;
+    ResultSet rsContato = null;
+
+    public TelaPerfilCandidato(Candidato candidato) throws ParseException {
         initComponents();
-    }      
+        this.candidato = candidato;
+
+        ConexaoBanco con = new ConexaoBanco();
+        if (con.conectar()) {
+            conexao = con.getConnection();
+            plotarDados();
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados");
+        }
+    }
+
+    public void plotarDados() throws ParseException{
+        String sqlCandidato = "SELECT idCandidato, nome, RG, dataNascimento FROM candidato WHERE idCandidato = ?";
+        String sqlEndereco = "SELECT rua, estado, cidade, CEP FROM endereco WHERE idCandidato = ?";
+        String sqlContato = "SELECT telefone, celular, email FROM contato WHERE idCandidato = ?";
+        try {
+            pstCandidato = conexao.prepareStatement(sqlCandidato);
+            pstCandidato.setInt(1, candidato.getIdCandidato()); // Passa o login como parâmetro para a consulta
+            rsCandidato = pstCandidato.executeQuery();
+            //ResultSet rsIdCandidato = pstCandidato.getGeneratedKeys();
+
+            if (rsCandidato.next()) {
+                // Preenche os campos com os dados do usuário                
+                txtIdCandidato.setText(rsCandidato.getString("idCandidato"));
+                txtNome.setText(rsCandidato.getString("nome"));
+                txtRg.setText(rsCandidato.getString("RG"));
+
+                // Formatar a data de nascimento
+                String dataNascimentoBanco = rsCandidato.getString("dataNascimento");
+                SimpleDateFormat formatoBanco = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat formatoSaida = new SimpleDateFormat("dd/MM/yyyy");
+
+                // Converter o formato da data de String para java.util.Date
+                java.util.Date dataNascimento = formatoBanco.parse(dataNascimentoBanco);
+
+                // Utilizar a formatação correta para exibir a data
+                String dataFormatada = formatoSaida.format(dataNascimento);
+                txtDatNasc.setText(dataFormatada);
+
+                pstEndereco = conexao.prepareStatement(sqlEndereco);;
+                pstEndereco.setString(1, txtIdCandidato.getText());;
+                rsEndereco = pstEndereco.executeQuery();
+
+                pstContato = conexao.prepareStatement(sqlContato);;
+                pstContato.setString(1, txtIdCandidato.getText());;
+                rsContato = pstContato.executeQuery();
+
+                if (rsEndereco.next() && rsContato.next()) {
+                    txtRua.setText(rsEndereco.getString("rua"));
+                    txtEstado.setText(rsEndereco.getString("estado"));
+                    txtCidade.setText(rsEndereco.getString("cidade"));
+                    txtCep.setText(rsEndereco.getString("CEP"));
+
+                    txtTelefone.setText(rsContato.getString("telefone"));
+                    txtCelular.setText(rsContato.getString("celular"));
+                    txtEmail.setText(rsContato.getString("email"));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Endereço não encontrado!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuário não encontrado!");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao buscar os dados: " + ex.getMessage());
+        }
+    }
 
     public void editar() {
         txtNome.setEnabled(true);
         txtRg.setEnabled(true);
-        txtDatNasc.setEnabled(true);       
+        txtDatNasc.setEnabled(true);
         txtCep.setEnabled(true);
         txtTelefone.setEnabled(true);
         txtCelular.setEnabled(true);
@@ -38,13 +108,13 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
     public void limpar_campos() {
         txtNome.setEnabled(false);
         txtRg.setEnabled(false);
-        txtDatNasc.setEnabled(false);        
+        txtDatNasc.setEnabled(false);
         txtCep.setEnabled(false);
         txtTelefone.setEnabled(false);
         txtCelular.setEnabled(false);
         txtEmail.setEnabled(false);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -279,7 +349,7 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-       
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void txtCepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCepKeyPressed

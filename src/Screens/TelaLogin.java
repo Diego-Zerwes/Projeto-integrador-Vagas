@@ -31,10 +31,10 @@ public class TelaLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Login bem sucedido!");
             
             if(candidato.getTipoUsuario().equals("candidato")) {
-                TelaPrincipalCandidato tpc = new TelaPrincipalCandidato();
+                TelaPrincipalCandidato tpc = new TelaPrincipalCandidato(candidato);
                 tpc.setVisible(true);
                 this.dispose();                
-            }
+            } 
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao verificar suas credenciais!");
         }

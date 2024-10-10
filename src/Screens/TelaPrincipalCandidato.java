@@ -1,17 +1,21 @@
 package Screens;
 
+import entities.Candidato;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TelaPrincipalCandidato extends javax.swing.JFrame {
     
-    private String loginUsuario;
+    private Candidato candidato;
     
     //construtor padrão
-    public TelaPrincipalCandidato() {
+    public TelaPrincipalCandidato(Candidato candidato) {
         initComponents();
+        this.candidato = candidato;
     }
+
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -130,16 +134,21 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
         // Passa o login armazenado para a TelaPerfilCandidato
-        TelaPerfilCandidato tela = new TelaPerfilCandidato();        
-        desktop.add(tela);
-        tela.setVisible(true);
+        TelaPerfilCandidato tela;        
+        try {
+            tela = new TelaPerfilCandidato(candidato);
+            desktop.add(tela);
+            tela.setVisible(true);
+        } catch (ParseException ex) {
+            Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed
 
     private void menVagasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menVagasVisualizarActionPerformed
         // TODO add your handling code here:
-        TelaVagasCandidato tela = new TelaVagasCandidato(loginUsuario);
-        tela.setVisible(true);
-        desktop.add(tela);
+//        TelaVagasCandidato tela = new TelaVagasCandidato();
+//        tela.setVisible(true);
+//        desktop.add(tela);
     }//GEN-LAST:event_menVagasVisualizarActionPerformed
 
     private void menCandidaturasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCandidaturasVisualizarActionPerformed
@@ -165,34 +174,36 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    }
+    //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaPrincipalCandidato().setVisible(true);
-            }
-        });
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            // Cria um objeto Candidato para teste e passa para a tela
+            Candidato candidatoTeste = new Candidato();
+            new TelaPrincipalCandidato(candidatoTeste).setVisible(true);
+        }
+    });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
