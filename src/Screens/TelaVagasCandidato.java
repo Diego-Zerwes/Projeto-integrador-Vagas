@@ -7,15 +7,11 @@ import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 public class TelaVagasCandidato extends javax.swing.JInternalFrame {
-
-    private String loginUsuario = null;
-
-    Connection conexao = null;
     
+    Connection conexao = null;    
 
     public TelaVagasCandidato(String loginUsuario) {
         initComponents();
-        this.loginUsuario = loginUsuario;
 
         ConexaoBanco con = new ConexaoBanco();
         if (con.conectar()) {

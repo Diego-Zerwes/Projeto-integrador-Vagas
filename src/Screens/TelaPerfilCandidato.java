@@ -94,6 +94,56 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Erro ao buscar os dados: " + ex.getMessage());
         }
     }
+    
+    public void salvar() throws ParseException {
+        String sql = "UPDATE candidato AS c "
+                + "INNER JOIN endereco AS e ON c.idCandidato = e.idCandidato "
+                + "INNER JOIN contato as ct ON c.idCandidato = ct.idCandidato "
+                + "SET c.nome = ?, c.RG = ?, c.dataNascimento = ?, "
+                + "    e.rua = ?, e.estado = ?, e.cidade = ?, e.CEP = ?, "
+                + "    ct.telefone = ?, ct.celular = ?, ct.email = ? "
+                + "WHERE c.idCandidato = ?";
+
+        try {
+            pstCandidato = conexao.prepareStatement(sql);
+            pstCandidato.setString(1, txtNome.getText());
+            pstCandidato.setString(2, txtRg.getText());
+
+            String dataTexto = txtDatNasc.getText();
+            SimpleDateFormat formatoEntrada = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatoBanco = new SimpleDateFormat("yyyy-MM-dd");
+
+            // Converter a data do formato "dd/MM/yyyy" para "yyyy-MM-dd"
+            java.util.Date dataNascimento = formatoEntrada.parse(dataTexto);
+            String dataFormatada = formatoBanco.format(dataNascimento);
+
+            // Converter java.util.Date para java.sql.Date
+            java.sql.Date dataSQL = java.sql.Date.valueOf(dataFormatada);
+            pstCandidato.setDate(3, dataSQL); // Passar o valor formatado como java.sql.Date
+
+            pstCandidato.setString(4, txtRua.getText());
+            pstCandidato.setString(5, txtEstado.getText());
+            pstCandidato.setString(6, txtCidade.getText());
+            pstCandidato.setString(7, txtCep.getText());
+
+            pstCandidato.setString(8, txtTelefone.getText());
+            pstCandidato.setString(9, txtCelular.getText());
+            pstCandidato.setString(10, txtEmail.getText());
+
+            pstCandidato.setString(11, txtIdCandidato.getText());
+            int linhasAtualizada = pstCandidato.executeUpdate();
+
+            if (linhasAtualizada > 0) {
+                limpar_campos();
+                JOptionPane.showMessageDialog(null, "Dados atualizados com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Falha na atualização dos dados!");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao salvar os dados: " + e.getMessage());
+        }
+    }
+
 
     public void editar() {
         txtNome.setEnabled(true);
@@ -349,7 +399,12 @@ public class TelaPerfilCandidato extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-
+        try {
+            //chamado o método salvar
+            salvar();
+        } catch (ParseException ex) {
+            Logger.getLogger(TelaPerfilCandidato.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void txtCepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCepKeyPressed
