@@ -66,6 +66,22 @@ public class TelaCurriculoCandidato extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }
     }
+    
+    public void excluirCurriculo(){
+        String sql = "DELETE FROM curriculo WHERE idCandidato=?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, this.candidato.getIdCandidato());
+            int excluirCurriculo = pst.executeUpdate();
+            if(excluirCurriculo > 0) {
+                txtExp.setText("");
+                txtGrad.setText("");
+                JOptionPane.showMessageDialog(null, "Currículo excluído com sucesso!"); 
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
+        }
+    }
 
     
     @SuppressWarnings("unchecked")
@@ -106,6 +122,11 @@ public class TelaCurriculoCandidato extends javax.swing.JInternalFrame {
         });
 
         btnExc.setText("Excluir");
+        btnExc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Nome candidato");
 
@@ -187,6 +208,11 @@ public class TelaCurriculoCandidato extends javax.swing.JInternalFrame {
         // editando o currículo        
         editarCurriculo();
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnExcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcActionPerformed
+        // excluindo o currículo  
+        excluirCurriculo();
+    }//GEN-LAST:event_btnExcActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
