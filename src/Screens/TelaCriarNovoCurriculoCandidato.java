@@ -44,6 +44,24 @@ public class TelaCriarNovoCurriculoCandidato extends javax.swing.JInternalFrame 
         }
     }
 
+    public void criarCurriculo() {
+        String sql = "INSERT INTO curriculo (experiencia, graduacao, idCandidato) VALUES (?, ?, ?)";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtExp.getText());
+            pst.setString(2, txtGrad.getText());
+            pst.setInt(3, this.candidato.getIdCandidato());
+            int cadastrarCurriculo = pst.executeUpdate();
+            if (cadastrarCurriculo > 0) {
+                JOptionPane.showMessageDialog(null, "Cadastro do currículo realizado com sucesso!");
+                txtExp.setEnabled(false);
+                txtGrad.setEnabled(false);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -57,11 +75,11 @@ public class TelaCriarNovoCurriculoCandidato extends javax.swing.JInternalFrame 
         jLabel4 = new javax.swing.JLabel();
         txtDataNasc = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtExp = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txtGrad = new javax.swing.JTextField();
+        btnCriarCur = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -85,15 +103,20 @@ public class TelaCriarNovoCurriculoCandidato extends javax.swing.JInternalFrame 
 
         txtDataNasc.setEnabled(false);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtExp.setColumns(20);
+        txtExp.setRows(5);
+        jScrollPane1.setViewportView(txtExp);
 
         jLabel5.setText("Experiência");
 
         jLabel6.setText("Graduação");
 
-        jButton1.setText("Criar");
+        btnCriarCur.setText("Criar");
+        btnCriarCur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCriarCurActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -107,12 +130,12 @@ public class TelaCriarNovoCurriculoCandidato extends javax.swing.JInternalFrame 
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
+                            .addComponent(btnCriarCur)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel6)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField4))
+                                    .addComponent(txtGrad))
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel2)
@@ -155,18 +178,23 @@ public class TelaCriarNovoCurriculoCandidato extends javax.swing.JInternalFrame 
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtGrad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btnCriarCur)
                 .addGap(82, 82, 82))
         );
 
         setBounds(0, 0, 730, 480);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCriarCurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarCurActionPerformed
+        // criando o currículo
+        criarCurriculo();
+    }//GEN-LAST:event_btnCriarCurActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnCriarCur;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -175,9 +203,9 @@ public class TelaCriarNovoCurriculoCandidato extends javax.swing.JInternalFrame 
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider jSlider1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField txtDataNasc;
+    private javax.swing.JTextArea txtExp;
+    private javax.swing.JTextField txtGrad;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtRg;
     // End of variables declaration//GEN-END:variables

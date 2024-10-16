@@ -134,7 +134,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         // Passa o login armazenado para a TelaPerfilCandidato
         TelaPerfilCandidato tela;        
         try {
-            tela = new TelaPerfilCandidato(candidato);
+            tela = new TelaPerfilCandidato(this.candidato);
             desktop.add(tela);
             tela.setVisible(true);
         } catch (ParseException ex) {
@@ -144,7 +144,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menVagasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menVagasVisualizarActionPerformed
         //TODO add your handling code here:
-        TelaVagasCandidato tela = new TelaVagasCandidato(candidato);
+        TelaVagasCandidato tela = new TelaVagasCandidato(this.candidato);
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_menVagasVisualizarActionPerformed
@@ -158,7 +158,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     private void menCurVisuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCurVisuActionPerformed
         // TODO add your handling code here:
-        TelaCurriculoCandidato tela = new TelaCurriculoCandidato();
+        TelaCurriculoCandidato tela = new TelaCurriculoCandidato(this.candidato);
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_menCurVisuActionPerformed
