@@ -2,6 +2,8 @@ package Screens;
 
 import dao.ConexaoBanco;
 import entities.Candidato;
+import entities.CandidatoVaga;
+import entities.Vagas;
 import java.sql.*;
 import javax.swing.JOptionPane;
 //a linha abaixo importa recursos da biblioteca rs2xml.jar
@@ -10,10 +12,13 @@ import net.proteanit.sql.DbUtils;
 public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
     Candidato candidato = new Candidato();
+    Vagas vaga = new Vagas();
 
     Connection conexao = null;
     PreparedStatement pst = null;
+    PreparedStatement pstCandVagas = null;
     ResultSet rs = null;
+    ResultSet rsCandVagas = null;
 
     public TelaVagasCandidato(Candidato candidato) {
         initComponents();
@@ -22,6 +27,7 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
         ConexaoBanco con = new ConexaoBanco();
         if (con.conectar()) {
             conexao = con.getConnection();
+            pesquisar_vaga();
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }
@@ -35,36 +41,26 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
             rs = pst.executeQuery();
             tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao pesquisar as vagas!" + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar as vagas! " + e.getMessage());
         }
     }
 
     public void candidatar() {
-        String sql = "UPDATE Vagas SET idCandidato=? WHERE idVagas=? AND idCandidato IS NULL";
+        String sql = "INSERT INTO CandidatoVagas (idCandidato, idVagas) VALUES (?, ?)";
         try {
             pst = conexao.prepareStatement(sql);
-            pst.setInt(1, candidato.getIdCandidato());
+            pst.setInt(1, this.candidato.getIdCandidato());
             int linhaSelecionada = tblVagas.getSelectedRow();
-
-            if (linhaSelecionada >= 0) {
-                Object idVagaObj = tblVagas.getModel().getValueAt(linhaSelecionada, 0);
-
-                if (idVagaObj != null && idVagaObj.toString().matches("\\d+")) {
-                    int idVaga = Integer.parseInt(idVagaObj.toString());
-                    pst.setInt(2, idVaga);
-
-                    int linhasAtualizadas = pst.executeUpdate();
-                    if (linhasAtualizadas > 0) {
-                        JOptionPane.showMessageDialog(null, "Cadastrado com sucesso!");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Cadastrado não realizado!");
-                        
-                    }
-                }
+            int idVaga = Integer.parseInt(tblVagas.getModel().getValueAt(linhaSelecionada, 0).toString());
+            pst.setInt(2, idVaga);
+            int candidatar = pst.executeUpdate();
+            if (candidatar > 0) {
+                JOptionPane.showMessageDialog(null, "Candidatura efetuada com sucesso! ");
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao se candidatar à vaga! ");                
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao se candidatar à vaga!" + e.getMessage());
-
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados! " + e.getMessage());
         }
     }
 
@@ -144,7 +140,7 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
                             .addComponent(txtPesquisarVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(jLabel1))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(17, 17, 17))
         );
         layout.setVerticalGroup(
@@ -155,9 +151,9 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
                         .addGap(15, 15, 15)
                         .addComponent(txtPesquisarVaga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelarCandidatura)
                     .addComponent(btnCandidatar))
