@@ -57,7 +57,26 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
             if (candidatar > 0) {
                 JOptionPane.showMessageDialog(null, "Candidatura efetuada com sucesso! ");
             } else {
-                JOptionPane.showMessageDialog(null, "Erro ao se candidatar à vaga! ");                
+                JOptionPane.showMessageDialog(null, "Erro ao se candidatar à vaga! ");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados! " + e.getMessage());
+        }
+    }
+
+    public void cancelarCandidatura() {
+        String sql = "DELETE FROM CandidatoVagas WHERE idVagas=? AND idCandidato=? ";
+        try {
+            pst = conexao.prepareStatement(sql);
+            int linhaSelecionada = tblVagas.getSelectedRow();
+            int idVaga = Integer.parseInt(tblVagas.getModel().getValueAt(linhaSelecionada, 0).toString());
+            pst.setInt(1, idVaga);
+            pst.setInt(2, this.candidato.getIdCandidato());
+            int cancelarCandidatura = pst.executeUpdate();
+            if (cancelarCandidatura > 0) {
+                JOptionPane.showMessageDialog(null, "Candidatura cancelada com sucesso! ");
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao cancelar candidatura! ");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados! " + e.getMessage());
@@ -115,6 +134,11 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
         btnCancelarCandidatura.setText("Cancelar candidatura");
         btnCancelarCandidatura.setEnabled(false);
+        btnCancelarCandidatura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarCandidaturaActionPerformed(evt);
+            }
+        });
 
         btnCandidatar.setText("Candidatar");
         btnCandidatar.setEnabled(false);
@@ -182,6 +206,11 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
         // chamado o método candidatar
         candidatar();
     }//GEN-LAST:event_btnCandidatarActionPerformed
+
+    private void btnCancelarCandidaturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarCandidaturaActionPerformed
+        // chamando o método cancelarCandidatura
+        cancelarCandidatura();
+    }//GEN-LAST:event_btnCancelarCandidaturaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
