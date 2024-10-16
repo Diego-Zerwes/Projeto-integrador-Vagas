@@ -23,13 +23,13 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         menPerfil = new javax.swing.JMenu();
         menPerfilVisualizar = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        menVagas = new javax.swing.JMenu();
         menVagasVisualizar = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
+        menCandidaturas = new javax.swing.JMenu();
         menCandidaturasVisualizar = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        menCur = new javax.swing.JMenu();
+        menCurVisu = new javax.swing.JMenuItem();
+        menCurNovo = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Candidato");
@@ -63,7 +63,7 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
         jMenuBar1.add(menPerfil);
 
-        jMenu2.setText("Vagas");
+        menVagas.setText("Vagas");
 
         menVagasVisualizar.setText("Visualizar vagas");
         menVagasVisualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -71,11 +71,11 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
                 menVagasVisualizarActionPerformed(evt);
             }
         });
-        jMenu2.add(menVagasVisualizar);
+        menVagas.add(menVagasVisualizar);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(menVagas);
 
-        jMenu3.setText("Candidaturas");
+        menCandidaturas.setText("Candidaturas");
 
         menCandidaturasVisualizar.setText("Visualizar candidaturas");
         menCandidaturasVisualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -83,29 +83,29 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
                 menCandidaturasVisualizarActionPerformed(evt);
             }
         });
-        jMenu3.add(menCandidaturasVisualizar);
+        menCandidaturas.add(menCandidaturasVisualizar);
 
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(menCandidaturas);
 
-        jMenu1.setText("Currículo");
+        menCur.setText("Currículo");
 
-        jMenuItem1.setText("Visualizar ");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menCurVisu.setText("Visualizar ");
+        menCurVisu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menCurVisuActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        menCur.add(menCurVisu);
 
-        jMenuItem2.setText("Criar novo currículo");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menCurNovo.setText("Criar novo currículo");
+        menCurNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menCurNovoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        menCur.add(menCurNovo);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(menCur);
 
         setJMenuBar(jMenuBar1);
 
@@ -150,25 +150,25 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
     }//GEN-LAST:event_menVagasVisualizarActionPerformed
 
     private void menCandidaturasVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCandidaturasVisualizarActionPerformed
-        // TODO add your handling code here:
-        TelaCandidaturasCandidato tela = new TelaCandidaturasCandidato();
+        // tela candidaturas inscritas do candidato
+        TelaCandidaturasCandidato tela = new TelaCandidaturasCandidato(this.candidato);
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_menCandidaturasVisualizarActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menCurVisuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCurVisuActionPerformed
         // TODO add your handling code here:
         TelaCurriculoCandidato tela = new TelaCurriculoCandidato();
         tela.setVisible(true);
         desktop.add(tela);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_menCurVisuActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void menCurNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCurNovoActionPerformed
         // TODO add your handling code here:
-        TelaCriarNovoCurriculoCandidato tela = new TelaCriarNovoCurriculoCandidato();
+        TelaCriarNovoCurriculoCandidato tela = new TelaCriarNovoCurriculoCandidato(this.candidato);
         tela.setVisible(true);
         desktop.add(tela);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_menCurNovoActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -206,15 +206,15 @@ public class TelaPrincipalCandidato extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
-    public static javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenu menCandidaturas;
     public static javax.swing.JMenuItem menCandidaturasVisualizar;
+    public static javax.swing.JMenu menCur;
+    private javax.swing.JMenuItem menCurNovo;
+    private javax.swing.JMenuItem menCurVisu;
     private javax.swing.JMenu menPerfil;
     public static javax.swing.JMenuItem menPerfilVisualizar;
+    private javax.swing.JMenu menVagas;
     public static javax.swing.JMenuItem menVagasVisualizar;
     // End of variables declaration//GEN-END:variables
 }
