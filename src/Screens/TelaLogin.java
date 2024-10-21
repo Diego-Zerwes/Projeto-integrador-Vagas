@@ -26,9 +26,26 @@ public class TelaLogin extends javax.swing.JFrame {
         String nome = txtLogin.getText();
         String senha = txtSenha.getText();
 
+
         Candidato candidato = new Candidato(nome, senha);
         if(candidato.verificarCredenciais(conexao)) {
             JOptionPane.showMessageDialog(null, "Login bem sucedido!");
+
+            /*
+            Para obter a senha como uma String legível, você deve construir uma String a partir do array de caracteres usando o construtor de String, assim:
+
+            java
+            Copiar código
+            String senha = new String(txtSenha.getPassword());
+            Esse construtor aceita o array de caracteres e o converte em uma String legível. Por exemplo:
+
+            java
+            Copiar código
+            char[] passwordArray = {'m', 'y', 's', 'e', 'c', 'r', 'e', 't'};
+            String password = new String(passwordArray);
+            System.out.println(password);  // Saída: mysecret
+             */
+
             
             if(candidato.getTipoUsuario().equals("candidato")) {
                 TelaPrincipalCandidato tpc = new TelaPrincipalCandidato(candidato);
@@ -59,6 +76,12 @@ public class TelaLogin extends javax.swing.JFrame {
         jLabel1.setText("Login");
 
         jLabel2.setText("Senha");
+
+        txtLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLoginActionPerformed(evt);
+            }
+        });
 
         btnEntrar.setText("Entrar");
         btnEntrar.addActionListener(new java.awt.event.ActionListener() {
@@ -131,6 +154,10 @@ public class TelaLogin extends javax.swing.JFrame {
         // chamando o método logar();
         logar();
     }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void txtLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLoginActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLoginActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

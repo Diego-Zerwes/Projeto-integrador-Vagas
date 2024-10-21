@@ -2,15 +2,17 @@
 
 package Screens;
 
+import br.com.parg.viacep.ViaCEP;
+import br.com.parg.viacep.ViaCEPException;
 import java.sql.*;
 import dao.ConexaoBanco;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
-import entities.Empregador;
-import br.com.parg.viacep.ViaCEP;
-import br.com.parg.viacep.ViaCEPException;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import java.util.Date;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+
+
 
 public class TelaCadastroEmpregador extends javax.swing.JFrame {
     Connection conexao = null;
@@ -18,19 +20,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
     PreparedStatement pstEndereco = null;
     PreparedStatement pstContato = null;
     ResultSet rs = null;
-    private JTextField jNomeFantasia;
-    private JTextField jCNPJ;
-    private JPasswordField jSenha;
-    private JTextField jCEP;
-    private JTextField jCel;
-    private JTextField jEmail;
-    private JTextField jIE;
-    private JTextField jRazaoSocial;
-    private JTextField jTel;
-    private JTextField jRua;
-    private JTextField jEstado;
-    private JTextField jCidade;
-    private JTextField jCep;
+    
 
 
 
@@ -46,7 +36,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
         }
     }
 
-    public void cadastrar(int jidEmpregador) {
+    public void cadastrar() {
         String sqlEmpregador = "INSERT INTO Empregador (nomeFantasia, razaoSocial, CNPJ, IE, tipoUsuario, senha) VALUES (?,?,?,?,?,?)";
         String sqlEndereco = "INSERT INTO endereco (rua, estado, cidade, CEP, idEmpregador) VALUES (?,?,?,?,?)";
         String sqlContato = "INSERT INTO contato (telefone, celular, email, idEmpregador) VALUES (?,?,?,?)";
@@ -122,15 +112,12 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
         jNomeFantasia.requestFocus();
     }
 
-    private void initComponents() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-}
+
 
 
 
   
-    @SuppressWarnings("unchecked")
+ 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -309,9 +296,9 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addComponent(jLabel1)
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jidEmpregador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jidEmpregador, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jNomeFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -370,7 +357,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
 
-        this.setVisible(false)
+        this.setVisible(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void jNomeFantasiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNomeFantasiaActionPerformed
@@ -379,33 +366,33 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
 
     private void btnCadastrarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnCadastrarKeyPressed
         // TODO add your handling code here:
-        cadastrar()
-        TelaLogin tl = new TelaLogin()
-        tl.setVisible(true)
-        this.dispose()
+        cadastrar();
+        TelaLogin tl = new TelaLogin();
+        tl.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnCadastrarKeyPressed
 
     private void jCEPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jCEPKeyPressed
 
         if (evt.getExtendedKeyCode() == evt.VK_ENTER) {
-            ViaCEP viaCep = new ViaCEP()
+            ViaCEP viaCep = new ViaCEP();
             try {
-                viaCep.buscar(jCep.getText())
-                jRua.setText(viaCep.getLogradouro())
-                jEstado.setText(viaCep.getUf())
-                jCidade.setText(viaCep.getLocalidade())
+                viaCep.buscar(jCEP.getText());
+                jRua.setText(viaCep.getLogradouro());
+                jEstado.setText(viaCep.getUf());
+                jCidade.setText(viaCep.getLocalidade());
             } catch (ViaCEPException ex) {
                 JOptionPane.showMessageDialog(null,
-                        "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", ERROR_MESSAGE)
+                        "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", ERROR_MESSAGE);
             }
 
         }
     }//GEN-LAST:event_jCEPKeyPressed
 
     private void jCEPKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jCEPKeyTyped
-        char c = evt.getKeyChar()
+        char c = evt.getKeyChar();
         if (!Character.isDigit((c))) {
-            evt.consume()
+            evt.consume();
         }
     }//GEN-LAST:event_jCEPKeyTyped
 
@@ -413,7 +400,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jSenhaActionPerformed
 
-    public static void main(String args[]){
+     public static void main(String args[]){
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -440,9 +427,9 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaCadastroEmpregador().setVisible(true)
+                new TelaCadastroEmpregador().setVisible(true);
             }
-        })
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -477,3 +464,4 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
     private javax.swing.JTextField jidEmpregador;
     // End of variables declaration//GEN-END:variables
 }
+

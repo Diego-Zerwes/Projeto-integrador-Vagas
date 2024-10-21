@@ -1,12 +1,18 @@
 
 package Screens;
 
+import entities.Candidato;
+import entities.Empregador;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
-    
+    private Empregador empregador;
     public TelaPrincipalEmpregador() {
         initComponents();
+        this.empregador = empregador;
     }
 
     
@@ -116,9 +122,14 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
         // chamando a tela de perfil do empregador
-        TelaPerfilEmpregador tela = new TelaPerfilEmpregador();
-        tela.setVisible(true);
-        desktop.add(tela);
+        TelaPerfilEmpregador tela;        
+        try {
+            tela = new TelaPerfilEmpregador(this.empregador);
+            desktop.add(tela);
+            tela.setVisible(true);
+        } catch (ParseException ex) {
+            Logger.getLogger(TelaPrincipalCandidato.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
