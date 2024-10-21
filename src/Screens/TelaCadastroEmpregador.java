@@ -37,7 +37,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
     }
 
     public void cadastrar() {
-        String sqlEmpregador = "INSERT INTO Empregador (nomeFantasia, razaoSocial, CNPJ, IE, tipoUsuario, senha) VALUES (?,?,?,?,?,?)";
+        String sqlEmpregador = "INSERT INTO Empregador (nomeEmpregador, razaoSocialEmpregador, cnpjEmpregador, inscricaoEstadual, senha) VALUES (?,?,?,?,?)";
         String sqlEndereco = "INSERT INTO endereco (rua, estado, cidade, CEP, idEmpregador) VALUES (?,?,?,?,?)";
         String sqlContato = "INSERT INTO contato (telefone, celular, email, idEmpregador) VALUES (?,?,?,?)";
 
@@ -53,8 +53,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
             pstEmpregador.setString(2, jRazaoSocial.getText());
             pstEmpregador.setString(3, jCNPJ.getText());
             pstEmpregador.setString(4, jIE.getText());
-            pstEmpregador.setString(5, "Empregador");
-            pstEmpregador.setString(6, new String(jSenha.getPassword()));
+            pstEmpregador.setString(5, new String(jSenha.getPassword()));
             int empregadorCadastrado = pstEmpregador.executeUpdate();
             ResultSet rsId = pstEmpregador.getGeneratedKeys();
             int idEmpregador = 0;
@@ -203,6 +202,11 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
 
         btnCadastrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCadastrarMouseClicked(evt);
+            }
+        });
         btnCadastrar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 btnCadastrarKeyPressed(evt);
@@ -366,10 +370,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
 
     private void btnCadastrarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnCadastrarKeyPressed
         // TODO add your handling code here:
-        cadastrar();
-        TelaLogin tl = new TelaLogin();
-        tl.setVisible(true);
-        this.dispose();
+    
     }//GEN-LAST:event_btnCadastrarKeyPressed
 
     private void jCEPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jCEPKeyPressed
@@ -399,6 +400,14 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
     private void jSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jSenhaActionPerformed
+
+    private void btnCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCadastrarMouseClicked
+        // TODO add your handling code here:
+            cadastrar();
+        TelaLogin tl = new TelaLogin();
+        tl.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnCadastrarMouseClicked
 
      public static void main(String args[]){
         /* Set the Nimbus look and feel */
