@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 import java.sql.*;
 import dao.ConexaoBanco;
 import entities.Candidato;
+import entities.Empregador;
 
 public class TelaLogin extends javax.swing.JFrame {
 
@@ -12,6 +13,7 @@ public class TelaLogin extends javax.swing.JFrame {
     ResultSet rs = null;
 
     public TelaLogin() {
+        
         initComponents();
 
         ConexaoBanco con = new ConexaoBanco();
@@ -28,33 +30,46 @@ public class TelaLogin extends javax.swing.JFrame {
 
 
         Candidato candidato = new Candidato(nome, senha);
-        if(candidato.verificarCredenciais(conexao)) {
-            JOptionPane.showMessageDialog(null, "Login bem sucedido!");
-
-            /*
-            Para obter a senha como uma String legível, você deve construir uma String a partir do array de caracteres usando o construtor de String, assim:
-
-            java
-            Copiar código
-            String senha = new String(txtSenha.getPassword());
-            Esse construtor aceita o array de caracteres e o converte em uma String legível. Por exemplo:
-
-            java
-            Copiar código
-            char[] passwordArray = {'m', 'y', 's', 'e', 'c', 'r', 'e', 't'};
-            String password = new String(passwordArray);
-            System.out.println(password);  // Saída: mysecret
-             */
-
+        Empregador empregador = new Empregador(nome, senha);
+        
+        if(candidato.verificarCredenciais(conexao) || empregador.verificarCredenciais(conexao)) {
+            JOptionPane.showMessageDialog(null, "Login bem sucedido!");       
             
-            if(candidato.getTipoUsuario().equals("candidato")) {
+            //if(candidato.getTipoUsuario().equals("candidato")) {
+              //  TelaPrincipalCandidato tpc = new TelaPrincipalCandidato(candidato);
+              //  tpc.setVisible(true);
+              //  this.dispose();                
+           // } else if(empregador.getTipoUsuario().equals("empregador")){
+                //empregador.verificarCredenciais(conexao);
+                
+                
+              //  TelaPrincipalEmpregador tpe = new TelaPrincipalEmpregador(empregador);
+              //  tpe.setVisible(true);
+              //  this.dispose();
+            try {
+                if(candidato.getTipoUsuario().equals("candidato")) {
                 TelaPrincipalCandidato tpc = new TelaPrincipalCandidato(candidato);
                 tpc.setVisible(true);
                 this.dispose();                
-            } 
+                }        
+            }catch(Exception ex) {
+                
+                 if(empregador.getTipoUsuario().equals("empregador")){
+                    empregador.verificarCredenciais(conexao);
+                
+                
+                    TelaPrincipalEmpregador tpe = new TelaPrincipalEmpregador(empregador);
+                    tpe.setVisible(true);
+                    this.dispose();
+                 }
+            }
+              
+              
+              
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao verificar suas credenciais!");
         }
+ 
     }
 
     @SuppressWarnings("unchecked")
@@ -144,10 +159,11 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        // chamando a tela de opção de cadastro
+
         TelaOpcaoCadastro tela = new TelaOpcaoCadastro();
         tela.setVisible(true);
         this.setVisible(false);
+        
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed

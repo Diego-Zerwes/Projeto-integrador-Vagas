@@ -1,7 +1,7 @@
 
 package Screens;
 
-import entities.Candidato;
+//import entities.Candidato;
 import entities.Empregador;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
     private Empregador empregador;
-    public TelaPrincipalEmpregador() {
+    public TelaPrincipalEmpregador(Empregador empregador) {
         initComponents();
         this.empregador = empregador;
     }
@@ -185,8 +185,13 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run(Empregador empregador) {
+                new TelaPrincipalEmpregador(empregador).setVisible(true);
+            }
+
+            @Override
             public void run() {
-                new TelaPrincipalEmpregador().setVisible(true);
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         });
     }

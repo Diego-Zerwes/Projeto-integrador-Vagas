@@ -37,7 +37,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
     }
 
     public void cadastrar() {
-        String sqlEmpregador = "INSERT INTO Empregador (nomeEmpregador, razaoSocialEmpregador, cnpjEmpregador, inscricaoEstadual, senha) VALUES (?,?,?,?,?)";
+        String sqlEmpregador = "INSERT INTO Empregador (nomeEmpregador, razaoSocialEmpregador, cnpjEmpregador, inscricaoEstadual, senha, tipoUsuario) VALUES (?,?,?,?,?,?)";
         String sqlEndereco = "INSERT INTO endereco (rua, estado, cidade, CEP, idEmpregador) VALUES (?,?,?,?,?)";
         String sqlContato = "INSERT INTO contato (telefone, celular, email, idEmpregador) VALUES (?,?,?,?)";
 
@@ -54,6 +54,7 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
             pstEmpregador.setString(3, jCNPJ.getText());
             pstEmpregador.setString(4, jIE.getText());
             pstEmpregador.setString(5, new String(jSenha.getPassword()));
+            pstEmpregador.setString(6,"empregador");
             int empregadorCadastrado = pstEmpregador.executeUpdate();
             ResultSet rsId = pstEmpregador.getGeneratedKeys();
             int idEmpregador = 0;
@@ -156,6 +157,8 @@ public class TelaCadastroEmpregador extends javax.swing.JFrame {
         jLabel1.setText("Insira os dados");
 
         jLabel2.setText("Id");
+
+        jidEmpregador.setEditable(false);
 
         jLabel3.setText("Nome fantasia *");
 

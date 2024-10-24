@@ -24,8 +24,15 @@ public class Empregador {
     public Empregador() {
     }
 
-    public Empregador(String nomeFantasia, String razaoSocial, String CNPJ, String IE, String senha, String tipoUsuario) {
-        this.nomeFantasia = nomeFantasia;
+    public Empregador(String nome, String senha) {
+        this.nomeFantasia = nome;
+        this.senha = senha;
+    }
+    
+    
+
+    public Empregador(String nome, String razaoSocial, String CNPJ, String IE, String senha, String tipoUsuario) {
+        this.nomeFantasia = nome;
         this.razaoSocial = razaoSocial;
         this.CNPJ = CNPJ;
         this.IE = IE;
@@ -33,9 +40,9 @@ public class Empregador {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public Empregador(int idEmpregador, String nomeFantasia, String razaoSocial, String CNPJ, String IE, String senha, String tipoUsuario) {
+    public Empregador(int idEmpregador, String nome, String razaoSocial, String CNPJ, String IE, String senha, String tipoUsuario) {
         this.idEmpregador = idEmpregador;
-        this.nomeFantasia = nomeFantasia;
+        this.nomeFantasia = nome;
         this.razaoSocial = razaoSocial;
         this.CNPJ = CNPJ;
         this.IE = IE;
@@ -55,8 +62,8 @@ public class Empregador {
         return nomeFantasia;
     }
 
-    public void setNomeFantasia(String nomeFantasia) {
-        this.nomeFantasia = nomeFantasia;
+    public void setNomeFantasia(String nome) {
+        this.nomeFantasia = nome;
     }
 
     public String getRazaoSocial() {
@@ -100,10 +107,10 @@ public class Empregador {
     }
 
     public String toString() {
-        return "Candidato{" + "idEmpregador=" + idEmpregador + ", nomeFantasia=" + nomeFantasia + ", razaoSocial=" + razaoSocial + ", senha=" + senha + ", tipoUsuario=" + tipoUsuario + '}';
+        return "Empregador{" + "idEmpregador=" + idEmpregador + ", nomeEmpregador=" + nomeFantasia + ", razaoSocial=" + razaoSocial + ", senha=" + senha + ", tipoUsuario=" + tipoUsuario + '}';
     }   
     public boolean verificarCredenciais(Connection conexao) {
-       String sql = "SELECT * FROM Empregador WHERE nomeFantasia=? and senha=?";
+       String sql = "SELECT * FROM Empregador WHERE nomeEmpregador=? and senha=?";
        try(PreparedStatement pst = conexao.prepareStatement(sql)) {
            pst.setString(1, this.nomeFantasia);
            pst.setString(2, this.senha);

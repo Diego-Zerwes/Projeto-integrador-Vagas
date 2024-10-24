@@ -4,18 +4,55 @@
  */
 package Screens;
 
+import dao.ConexaoBanco;
+import entities.Empregador;
+import entities.Vagas;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
+
 /**
  *
  * @author Usuario
  */
 public class TelaVagasEmpregador extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form TelaVagasEmpregador
-     */
+    Empregador empregador = new Empregador();
+    Vagas vaga = new Vagas();
+
+    Connection conexao = null;
+    PreparedStatement pst = null;
+    PreparedStatement pstCandVagas = null;
+    ResultSet rs = null;
+    ResultSet rsCandVagas = null;
+    
     public TelaVagasEmpregador() {
         initComponents();
+        
+        this.empregador = empregador;
+
+        ConexaoBanco con = new ConexaoBanco();
+        if (con.conectar()) {
+            conexao = con.getConnection();
+            pesquisar_vaga();
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
+        }
     }
+    public void pesquisar_vaga() {
+        String sql = "SELECT idVagas AS Id, descricao AS Descricão, remuneracao AS Remuneracão, requisitos AS Requisitos, idEmpregador FROM Vagas WHERE descricao like ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtPesquisarVaga.getText() + "%");
+            rs = pst.executeQuery();
+            tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar as vagas! " + e.getMessage());
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,10 +63,10 @@ public class TelaVagasEmpregador extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
+        txtPesquisarVaga = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblVagas = new javax.swing.JTable();
 
         setClosable(true);
         setIconifiable(true);
@@ -37,9 +74,15 @@ public class TelaVagasEmpregador extends javax.swing.JInternalFrame {
         setTitle("Vagas");
         setPreferredSize(new java.awt.Dimension(450, 371));
 
+        txtPesquisarVaga.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPesquisarVagaKeyPressed(evt);
+            }
+        });
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/ic_search_icon.png"))); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblVagas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -50,7 +93,7 @@ public class TelaVagasEmpregador extends javax.swing.JInternalFrame {
                 "Id", "Descrição", "Salário", "Vagas"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblVagas);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -60,7 +103,7 @@ public class TelaVagasEmpregador extends javax.swing.JInternalFrame {
                 .addContainerGap(7, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtPesquisarVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel1)
                         .addGap(30, 30, 30))
@@ -76,7 +119,7 @@ public class TelaVagasEmpregador extends javax.swing.JInternalFrame {
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(13, 13, 13)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtPesquisarVaga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 5, Short.MAX_VALUE))
@@ -85,11 +128,15 @@ public class TelaVagasEmpregador extends javax.swing.JInternalFrame {
         setBounds(0, 0, 450, 371);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtPesquisarVagaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarVagaKeyPressed
+      pesquisar_vaga();
+    }//GEN-LAST:event_txtPesquisarVagaKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tblVagas;
+    private javax.swing.JTextField txtPesquisarVaga;
     // End of variables declaration//GEN-END:variables
 }
