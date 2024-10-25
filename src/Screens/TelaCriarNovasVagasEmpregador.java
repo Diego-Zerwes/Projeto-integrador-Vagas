@@ -36,31 +36,50 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
         }
     }
         public void cadastrar() {
-        String sqlVagas = "INSERT INTO Vagas (descricao, remuneracao, requisitos) VALUES (?,?,?)";
-        
-        try {
-            if (txtDescricao.getText().isEmpty() || txtRemuneracao.getText().isEmpty() || txtRequisitos.getText().isEmpty()){
-                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
-                return;
-            }
-            conexao.setAutoCommit(false);
-            pstVagas = conexao.prepareStatement(sqlVagas, Statement.RETURN_GENERATED_KEYS);
-            pstVagas.setString(1, txtDescricao.getText());
-            pstVagas.setString(2, txtRemuneracao.getText());
-            pstVagas.setString(3, txtRequisitos.getText());
-            int VagasCadastrado = pstVagas.executeUpdate();
-            ResultSet rsId = pstVagas.getGeneratedKeys();
-            int idEmpregador = 0;
-            if (rsId.next()) {
-                idEmpregador = rsId.getInt(1);
-            }
-            if (idEmpregador > 0) {
+    String sqlVagas = "INSERT INTO Vagas (descricao, remuneracao, requisitos) VALUES (?,?,?)";
+    
+    try {
+        if (txtDescricao.getText().isEmpty() || txtRemuneracao.getText().isEmpty() || txtRequisitos.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+            return;
         }
-        
+        conexao.setAutoCommit(false);
+        pstVagas = conexao.prepareStatement(sqlVagas, Statement.RETURN_GENERATED_KEYS);
+        pstVagas.setString(1, txtDescricao.getText());
+        pstVagas.setString(2, txtRemuneracao.getText());
+        pstVagas.setString(3, txtRequisitos.getText());
+        int VagasCadastrado = pstVagas.executeUpdate();
+        ResultSet rsId = pstVagas.getGeneratedKeys();
+        int idVaga = 0;
+        if (rsId.next()) {
+            idVaga = rsId.getInt(1);
+        }
+        if (idVaga > 0) {
+            // Sucesso ao cadastrar a vaga
+            JOptionPane.showMessageDialog(null, "Vaga cadastrada com sucesso!");
+            conexao.commit();
+        } else {
+            // Falha ao cadastrar a vaga
+            JOptionPane.showMessageDialog(null, "Falha ao cadastrar a vaga");
+            conexao.rollback();
+        }
     } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao inserir no banco de dados: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Erro ao cadastrar vaga: " + e.getMessage(), "Erro", ERROR_MESSAGE);
+        try {
+            conexao.rollback();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao reverter transação: " + ex.getMessage(), "Erro", ERROR_MESSAGE);
         }
+    } finally {
+        try {
+            if (pstVagas != null) pstVagas.close();
+            if (conexao != null) conexao.setAutoCommit(true);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao fechar recursos: " + e.getMessage(), "Erro", ERROR_MESSAGE);
         }
+    }
+}
+
         public void limpar_campos() {
         txtDescricao.setText("");
         txtRemuneracao.setText("");
