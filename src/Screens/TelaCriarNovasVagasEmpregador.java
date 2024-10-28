@@ -23,62 +23,65 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
     PreparedStatement pstEmpregador = null;
     PreparedStatement pstVagas = null;
     ResultSet rs = null;
+    private javax.swing.JTextField txtEmpregador;
     
-    public TelaCriarNovasVagasEmpregador() {
+    public TelaCriarNovasVagasEmpregador(Empregador empregador) {
         initComponents();
         
+        this.empregador = empregador; // Receba o empregador logado
         ConexaoBanco con = new ConexaoBanco();
         if (con.conectar()) {
             conexao = con.getConnection();
-            //OptionPane.showMessageDialog(null, "Conexão com o banco estabelecida com sucesso");
+            txtEmpregador.setText(String.valueOf(empregador.getIdEmpregador()));
         } else {
             JOptionPane.showMessageDialog(null, "Conexão com o banco falhou");
         }
+        
     }
         public void cadastrar() {
-    String sqlVagas = "INSERT INTO Vagas (descricao, remuneracao, requisitos) VALUES (?,?,?)";
-    
-    try {
-        if (txtDescricao.getText().isEmpty() || txtRemuneracao.getText().isEmpty() || txtRequisitos.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
-            return;
-        }
-        conexao.setAutoCommit(false);
-        pstVagas = conexao.prepareStatement(sqlVagas, Statement.RETURN_GENERATED_KEYS);
-        pstVagas.setString(1, txtDescricao.getText());
-        pstVagas.setString(2, txtRemuneracao.getText());
-        pstVagas.setString(3, txtRequisitos.getText());
-        int VagasCadastrado = pstVagas.executeUpdate();
-        ResultSet rsId = pstVagas.getGeneratedKeys();
-        int idVaga = 0;
-        if (rsId.next()) {
-            idVaga = rsId.getInt(1);
-        }
-        if (idVaga > 0) {
-            // Sucesso ao cadastrar a vaga
-            JOptionPane.showMessageDialog(null, "Vaga cadastrada com sucesso!");
-            conexao.commit();
-        } else {
-            // Falha ao cadastrar a vaga
-            JOptionPane.showMessageDialog(null, "Falha ao cadastrar a vaga");
-            conexao.rollback();
-        }
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Erro ao cadastrar vaga: " + e.getMessage(), "Erro", ERROR_MESSAGE);
+        String sqlVagas = "INSERT INTO Vagas (descricao, remuneracao, requisitos, idEmpregador) VALUES (?,?,?,?)";
         try {
-            conexao.rollback();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao reverter transação: " + ex.getMessage(), "Erro", ERROR_MESSAGE);
-        }
-    } finally {
-        try {
-            if (pstVagas != null) pstVagas.close();
-            if (conexao != null) conexao.setAutoCommit(true);
+            if (txtDescricao.getText().isEmpty() || txtRemuneracao.getText().isEmpty() || txtRequisitos.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+                return;
+            }
+            conexao.setAutoCommit(false);
+            pstVagas = conexao.prepareStatement(sqlVagas, Statement.RETURN_GENERATED_KEYS);
+            pstVagas.setString(1, txtDescricao.getText());
+            pstVagas.setString(2, txtRemuneracao.getText());
+            pstVagas.setString(3, txtRequisitos.getText());
+            pstVagas.setInt(4, empregador.getIdEmpregador()); // Adiciona o ID do empregador
+            int vagasCadastradas = pstVagas.executeUpdate();
+            ResultSet rsId = pstVagas.getGeneratedKeys();
+            int idVaga = 0;
+            if (rsId.next()) {
+                idVaga = rsId.getInt(1);
+            }
+            if (idVaga > 0) {
+                // Sucesso ao cadastrar a vaga
+                JOptionPane.showMessageDialog(null, "Vaga cadastrada com sucesso!");
+                conexao.commit();
+                limpar_campos();
+            } else {
+                // Falha ao cadastrar a vaga
+                JOptionPane.showMessageDialog(null, "Falha ao cadastrar a vaga");
+                conexao.rollback();
+            }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao fechar recursos: " + e.getMessage(), "Erro", ERROR_MESSAGE);
-        }
-    }
-}
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar vaga: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            try {
+                conexao.rollback();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao reverter transação: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } finally {
+            try {
+                if (pstVagas != null) pstVagas.close();
+                if (conexao != null) conexao.setAutoCommit(true);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar recursos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        
 
         public void limpar_campos() {
         txtDescricao.setText("");
@@ -99,6 +102,8 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRequisitos = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        txtEmpregador = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -123,6 +128,10 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel4.setText("Empregador");
+
+        txtEmpregador.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,39 +140,47 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(42, 42, 42)
-                            .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel3))
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtRemuneracao, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane1)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14))
+                            .addComponent(txtRemuneracao, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmpregador, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(82, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtEmpregador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtRemuneracao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(75, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(16, 16, 16))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(106, Short.MAX_VALUE))))
         );
 
         setBounds(0, 0, 730, 480);
@@ -180,8 +197,10 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField txtDescricao;
+    private javax.swing.JTextField txtEmpregador;
     private javax.swing.JTextField txtRemuneracao;
     private javax.swing.JTextArea txtRequisitos;
     // End of variables declaration//GEN-END:variables

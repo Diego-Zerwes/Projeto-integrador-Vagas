@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,8 +21,7 @@ import javax.swing.JOptionPane;
  * @author Usuario
  */
 public class TelaPerfilEmpregador extends javax.swing.JInternalFrame {
-private Empregador empregador;
-
+    private Empregador empregador;
     Connection conexao = null;
     PreparedStatement pstEmpregador = null;
     PreparedStatement pstEndereco = null;
@@ -29,11 +30,10 @@ private Empregador empregador;
     ResultSet rsEndereco = null;
     ResultSet rsContato = null;
 
-  
     public TelaPerfilEmpregador(Empregador empregador) throws ParseException {
         initComponents();
+        
         this.empregador = empregador;
-
         ConexaoBanco con = new ConexaoBanco();
         if (con.conectar()) {
             conexao = con.getConnection();
@@ -42,29 +42,29 @@ private Empregador empregador;
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados");
         }
     }
-    
-        public void plotarDados() throws ParseException{
-        String sqlEmpregador = "SELECT idEmpregador, nomeEmpregador, razaoSocialEmpregador, CNPJ, IE FROM Empregador WHERE idEmpregador = ?";
+
+    public void plotarDados() throws ParseException {
+        String sqlEmpregador = "SELECT idEmpregador, nomeEmpregador, razaoSocialEmpregador, cnpjEmpregador, inscricaoEstadual, senha FROM Empregador WHERE idEmpregador = ?";
         String sqlEndereco = "SELECT rua, estado, cidade, CEP FROM endereco WHERE idEmpregador = ?";
         String sqlContato = "SELECT telefone, celular, email FROM contato WHERE idEmpregador = ?";
         try {
             pstEmpregador = conexao.prepareStatement(sqlEmpregador);
             pstEmpregador.setInt(1, empregador.getIdEmpregador()); // Passa o login como parâmetro para a consulta
             rsEmpregador = pstEmpregador.executeQuery();
-            //ResultSet rsIdCandidato = pstCandidato.getGeneratedKeys();
-
             if (rsEmpregador.next()) {
-                // Preenche os campos com os dados do usuário                
+                // Preenche os campos com os dados do usuário
                 jidEmpregador.setText(rsEmpregador.getString("idEmpregador"));
-                jNomeFantasia.setText(rsEmpregador.getString("nomeFantasia"));
-                jCNPJ.setText(rsEmpregador.getString("CNPJ"));
+                jNomeFantasia.setText(rsEmpregador.getString("nomeEmpregador"));
+                jCNPJ.setText(rsEmpregador.getString("cnpjEmpregador"));
+                jIE.setText(rsEmpregador.getString("inscricaoEstadual"));
+                jSenha.setText(rsEmpregador.getString("senha"));
 
-                pstEndereco = conexao.prepareStatement(sqlEndereco);;
-                pstEndereco.setString(1, jidEmpregador.getText());;
+                pstEndereco = conexao.prepareStatement(sqlEndereco);
+                pstEndereco.setInt(1, empregador.getIdEmpregador());
                 rsEndereco = pstEndereco.executeQuery();
 
-                pstContato = conexao.prepareStatement(sqlContato);;
-                pstContato.setString(1, jidEmpregador.getText());;
+                pstContato = conexao.prepareStatement(sqlContato);
+                pstContato.setInt(1, empregador.getIdEmpregador());
                 rsContato = pstContato.executeQuery();
 
                 if (rsEndereco.next() && rsContato.next()) {
@@ -77,7 +77,7 @@ private Empregador empregador;
                     jCel.setText(rsContato.getString("celular"));
                     jEmail.setText(rsContato.getString("email"));
                 } else {
-                    JOptionPane.showMessageDialog(null, "Endereço não encontrado!");
+                    JOptionPane.showMessageDialog(null, "Endereço ou Contato não encontrado!");
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário não encontrado!");
@@ -87,53 +87,66 @@ private Empregador empregador;
         }
     }
 
-    
-    public void salvar() throws ParseException {
-        String sql = "UPDATE Empregador AS c "
-                + "INNER JOIN endereco AS e ON c.idEmpregador = e.idEmpregador "
-                + "INNER JOIN contato as ct ON c.idEmpregador = ct.idEmpregador "
-                + "SET c.nomeEmpregador = ?, c.cnpjEMpregador = ?, c.inscricaoEstadual = ?, "
-                + "    e.rua = ?, e.estado = ?, e.cidade = ?, e.CEP = ?, "
-                + "    ct.telefone = ?, ct.celular = ?, ct.email = ? "
-                + "WHERE c.idEmpregador = ?";
-
+    public void salvar() {
+        String sqlEmpregador = "UPDATE Empregador SET nomeEmpregador = ?, cnpjEmpregador = ?, inscricaoEstadual = ?, senha = ? WHERE idEmpregador = ?";
+        String sqlEndereco = "UPDATE endereco SET rua = ?, estado = ?, cidade = ?, CEP = ? WHERE idEmpregador = ?";
+        String sqlContato = "UPDATE contato SET telefone = ?, celular = ?, email = ? WHERE idEmpregador = ?";
         try {
-            pstEmpregador = conexao.prepareStatement(sql);
+            conexao.setAutoCommit(false);
+
+            pstEmpregador = conexao.prepareStatement(sqlEmpregador);
             pstEmpregador.setString(1, jNomeFantasia.getText());
             pstEmpregador.setString(2, jCNPJ.getText());
+            pstEmpregador.setString(3, jIE.getText());
+            pstEmpregador.setString(4, new String(jSenha.getPassword()));
+            pstEmpregador.setInt(5, empregador.getIdEmpregador());
+            int linhasAtualizadasEmpregador = pstEmpregador.executeUpdate();
 
-            pstEmpregador.setString(4, jRua.getText());
-            pstEmpregador.setString(5, jEstado.getText());
-            pstEmpregador.setString(6, jCidade.getText());
-            pstEmpregador.setString(7, jCEP.getText());
+            pstEndereco = conexao.prepareStatement(sqlEndereco);
+            pstEndereco.setString(1, jRua.getText());
+            pstEndereco.setString(2, jEstado.getText());
+            pstEndereco.setString(3, jCidade.getText());
+            pstEndereco.setString(4, jCEP.getText());
+            pstEndereco.setInt(5, empregador.getIdEmpregador());
+            int linhasAtualizadasEndereco = pstEndereco.executeUpdate();
 
-            pstEmpregador.setString(8, jTel.getText());
-            pstEmpregador.setString(9, jCel.getText());
-            pstEmpregador.setString(10, jEmail.getText());
+            pstContato = conexao.prepareStatement(sqlContato);
+            pstContato.setString(1, jTel.getText());
+            pstContato.setString(2, jCel.getText());
+            pstContato.setString(3, jEmail.getText());
+            pstContato.setInt(4, empregador.getIdEmpregador());
+            int linhasAtualizadasContato = pstContato.executeUpdate();
 
-            pstEmpregador.setString(11, jidEmpregador.getText());
-            int linhasAtualizada = pstEmpregador.executeUpdate();
-
-            if (linhasAtualizada > 0) {
-                limpar_campos();
+            if (linhasAtualizadasEmpregador > 0 && linhasAtualizadasEndereco > 0 && linhasAtualizadasContato > 0) {
+                conexao.commit();
                 JOptionPane.showMessageDialog(null, "Dados atualizados com sucesso!");
+                limpar_campos();
             } else {
+                conexao.rollback();
                 JOptionPane.showMessageDialog(null, "Falha na atualização dos dados!");
             }
         } catch (SQLException e) {
+            try {
+                conexao.rollback();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao desfazer alterações: " + ex.getMessage());
+            }
             JOptionPane.showMessageDialog(null, "Erro ao salvar os dados: " + e.getMessage());
         }
     }
-
 
     public void editar() {
         jNomeFantasia.setEnabled(true);
         jCNPJ.setEnabled(true);
         jIE.setEnabled(true);
         jCEP.setEnabled(true);
+        jRua.setEnabled(true);
+        jEstado.setEnabled(true);
+        jCidade.setEnabled(true);
         jTel.setEnabled(true);
         jCel.setEnabled(true);
         jEmail.setEnabled(true);
+        jSenha.setEnabled(true);
     }
 
     public void limpar_campos() {
@@ -141,13 +154,16 @@ private Empregador empregador;
         jCNPJ.setEnabled(false);
         jIE.setEnabled(false);
         jCEP.setEnabled(false);
+        jRua.setEnabled(false);
+        jEstado.setEnabled(false);
+        jCidade.setEnabled(false);
         jTel.setEnabled(false);
         jCel.setEnabled(false);
         jEmail.setEnabled(false);
+        jSenha.setEnabled(false);
+    
+
     }
-   
-
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -223,6 +239,11 @@ private Empregador empregador;
         jLabel12.setText("CEP");
 
         jButton1.setText("Editar");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
 
         jLabel13.setText("Senha");
 
@@ -334,7 +355,6 @@ private Empregador empregador;
                     .addComponent(jEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(47, 47, 47)
@@ -357,6 +377,12 @@ private Empregador empregador;
     private void jEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEstadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jEstadoActionPerformed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        salvar();
+        editar();
+        limpar_campos();
+    }//GEN-LAST:event_jButton1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
