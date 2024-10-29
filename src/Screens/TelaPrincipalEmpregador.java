@@ -148,7 +148,7 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // chamando a aba de criar novas vagas
-        TelaCriarNovasVagasEmpregador tela = new TelaCriarNovasVagasEmpregador();
+        TelaCriarNovasVagasEmpregador tela = new TelaCriarNovasVagasEmpregador(empregador);
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_jMenuItem4ActionPerformed

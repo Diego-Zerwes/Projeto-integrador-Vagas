@@ -23,7 +23,7 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
     PreparedStatement pstEmpregador = null;
     PreparedStatement pstVagas = null;
     ResultSet rs = null;
-    private javax.swing.JTextField txtEmpregador;
+    Empregador empregador = null;
     
     public TelaCriarNovasVagasEmpregador(Empregador empregador) {
         initComponents();
@@ -81,7 +81,8 @@ public class TelaCriarNovasVagasEmpregador extends javax.swing.JInternalFrame {
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Erro ao fechar recursos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
-        
+        }
+        }
 
         public void limpar_campos() {
         txtDescricao.setText("");
