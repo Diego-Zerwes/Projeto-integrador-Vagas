@@ -33,7 +33,6 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Empregador");
-        setPreferredSize(new java.awt.Dimension(819, 495));
         setResizable(false);
 
         desktop.setPreferredSize(new java.awt.Dimension(450, 369));
@@ -61,7 +60,7 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
         jMenuBar1.add(menPerfil);
 
-        jMenu2.setText("Vagas abertas");
+        jMenu2.setText("Vagas");
 
         jMenuItem4.setText("Criar nova vaga");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -89,7 +88,7 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu3.setText("Aba dos candidatos");
+        jMenu3.setText("Vagas Empreenchidas");
 
         jMenuItem2.setText("Visualizar");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -134,14 +133,14 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // chamando a tela de vagas abertas do empregador
-        TelaVisualizarVagasEmpregador tela = new TelaVisualizarVagasEmpregador();
+        TelaVisualizarVagasEmpregador tela = new TelaVisualizarVagasEmpregador(empregador);
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // chamando a aba de candidatos cadastrados
-        TelaAbaDosCandidatos tela = new TelaAbaDosCandidatos();
+        TelaCandidatosInscritosEmpregador tela = new TelaCandidatosInscritosEmpregador(empregador);
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
@@ -154,7 +153,9 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // chamando a aba de visualizar todas as vagas do empregador
+        TelaAbaDosCandidatos tela = new TelaAbaDosCandidatos (empregador);
+        tela.setVisible(true);
+        desktop.add(tela);
        
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 

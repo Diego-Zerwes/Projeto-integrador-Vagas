@@ -24,7 +24,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Vagas abertas"/>
+            <Property name="text" type="java.lang.String" value="Vagas"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
@@ -58,7 +58,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Aba dos candidatos"/>
+            <Property name="text" type="java.lang.String" value="Vagas Empreenchidas"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
@@ -112,7 +112,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="desktop" alignment="1" pref="451" max="32767" attributes="0"/>
+          <Component id="desktop" alignment="1" pref="472" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>

@@ -1,13 +1,43 @@
 
 package Screens;
 
+import dao.ConexaoBanco;
+import entities.Empregador;
+import entities.Vagas;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
+
 
 public class TelaVisualizarVagasEmpregador extends javax.swing.JInternalFrame {
+    private Empregador empregador;
+    private Vagas vaga = new Vagas();
 
+    private Connection conexao = null;
+    private PreparedStatement pst = null;
+    private ResultSet rs = null;
    
-    public TelaVisualizarVagasEmpregador() {
+    public TelaVisualizarVagasEmpregador(Empregador empregador) {
         initComponents();
+        this.empregador = empregador;
+        ConexaoBanco con = new ConexaoBanco(); if (con.conectar()) { conexao = con.getConnection(); pesquisar_vaga(); 
+        } else { JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
+        }
     }
+    public void pesquisar_vaga() { 
+        String sql = "SELECT idVagas AS Id, descricao AS Descrição, remuneracao AS Remuneração, requisitos AS Requisitos " 
+                + "FROM Vagas WHERE descricao LIKE ? AND idEmpregador = ?";
+   
+        try{
+        pst = conexao.prepareStatement(sql); pst.setString(1, txtBusca.getText() + "%"); pst.setInt(2, empregador.getIdEmpregador()); 
+        rs = pst.executeQuery(); tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
+    } catch (Exception e) { JOptionPane.showMessageDialog(null, "Erro ao pesquisar as vagas! " + e.getMessage());
+}
+}
+
+    
 
    
     @SuppressWarnings("unchecked")
@@ -24,6 +54,12 @@ public class TelaVisualizarVagasEmpregador extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setTitle("Visualizar minhas vagas");
         setPreferredSize(new java.awt.Dimension(730, 480));
+
+        txtBusca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscaKeyPressed(evt);
+            }
+        });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/ic_search_icon.png"))); // NOI18N
 
@@ -72,6 +108,10 @@ public class TelaVisualizarVagasEmpregador extends javax.swing.JInternalFrame {
 
         setBounds(0, 0, 730, 480);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtBuscaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscaKeyPressed
+        pesquisar_vaga();
+    }//GEN-LAST:event_txtBuscaKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
