@@ -28,7 +28,6 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jCriarNovaVagas = new javax.swing.JMenuItem();
         jVisualizarMinhasVagas = new javax.swing.JMenuItem();
-        jVisualizarTodasVagas = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jVagasEmpreenchidas = new javax.swing.JMenuItem();
 
@@ -79,14 +78,6 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         });
         jMenu2.add(jVisualizarMinhasVagas);
 
-        jVisualizarTodasVagas.setText("Visualizar todas as vagas");
-        jVisualizarTodasVagas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jVisualizarTodasVagasActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jVisualizarTodasVagas);
-
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Vagas Empreenchidas");
@@ -113,7 +104,7 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
         );
 
         setSize(new java.awt.Dimension(832, 503));
@@ -152,19 +143,6 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_jCriarNovaVagasActionPerformed
-
-    private void jVisualizarTodasVagasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jVisualizarTodasVagasActionPerformed
-        TelaAbaDosCandidatos tela;
-        try {
-            tela = new TelaAbaDosCandidatos(empregador);
-            tela.setVisible(true);
-            desktop.add(tela);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao abrir a tela: " + e.getMessage());
-        }
-    
-       
-    }//GEN-LAST:event_jVisualizarTodasVagasActionPerformed
 
     
     public static void main(String args[]) {
@@ -212,7 +190,6 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     public static javax.swing.JMenuItem jVagasEmpreenchidas;
     public static javax.swing.JMenuItem jVisualizarMinhasVagas;
-    private javax.swing.JMenuItem jVisualizarTodasVagas;
     private javax.swing.JMenu menPerfil;
     public static javax.swing.JMenuItem menPerfilVisualizar;
     // End of variables declaration//GEN-END:variables

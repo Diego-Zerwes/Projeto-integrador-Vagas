@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 
+
 public class TelaVisualizarVagasEmpregador extends javax.swing.JInternalFrame {
     private Empregador empregador;
     private Vagas vaga = new Vagas();
