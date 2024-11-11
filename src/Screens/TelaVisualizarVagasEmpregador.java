@@ -18,24 +18,41 @@ public class TelaVisualizarVagasEmpregador extends javax.swing.JInternalFrame {
     private Connection conexao = null;
     private PreparedStatement pst = null;
     private ResultSet rs = null;
-   
+
     public TelaVisualizarVagasEmpregador(Empregador empregador) {
         initComponents();
+        
         this.empregador = empregador;
-        ConexaoBanco con = new ConexaoBanco(); if (con.conectar()) { conexao = con.getConnection(); pesquisar_vaga(); 
-        } else { JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
+        ConexaoBanco con = new ConexaoBanco();
+        if (con.conectar()) {
+            conexao = con.getConnection();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    pesquisar_vaga();
+                }
+            }).start();
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }
     }
-    public void pesquisar_vaga() { 
+
+    public void pesquisar_vaga() {
         String sql = "SELECT idVagas AS Id, descricao AS Descrição, remuneracao AS Remuneração, requisitos AS Requisitos " 
                 + "FROM Vagas WHERE descricao LIKE ? AND idEmpregador = ?";
-   
-        try{
-        pst = conexao.prepareStatement(sql); pst.setString(1, txtBusca.getText() + "%"); pst.setInt(2, empregador.getIdEmpregador()); 
-        rs = pst.executeQuery(); tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
-    } catch (Exception e) { JOptionPane.showMessageDialog(null, "Erro ao pesquisar as vagas! " + e.getMessage());
-}
-}
+
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtBusca.getText() + "%");
+            pst.setInt(2, empregador.getIdEmpregador());
+            rs = pst.executeQuery();
+            tblVagas.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar as vagas! " + e.getMessage());
+        }
+    }
+
+
 
     
 

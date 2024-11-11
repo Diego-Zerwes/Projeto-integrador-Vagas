@@ -6,6 +6,7 @@ import entities.Empregador;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
@@ -25,11 +26,11 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         menPerfil = new javax.swing.JMenu();
         menPerfilVisualizar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jCriarNovaVagas = new javax.swing.JMenuItem();
+        jVisualizarMinhasVagas = new javax.swing.JMenuItem();
+        jVisualizarTodasVagas = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jVagasEmpreenchidas = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Empregador");
@@ -62,41 +63,41 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
         jMenu2.setText("Vagas");
 
-        jMenuItem4.setText("Criar nova vaga");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        jCriarNovaVagas.setText("Criar nova vaga");
+        jCriarNovaVagas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                jCriarNovaVagasActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem4);
+        jMenu2.add(jCriarNovaVagas);
 
-        jMenuItem1.setText("Visualizar minhas vagas ");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jVisualizarMinhasVagas.setText("Visualizar minhas vagas ");
+        jVisualizarMinhasVagas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jVisualizarMinhasVagasActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
+        jMenu2.add(jVisualizarMinhasVagas);
 
-        jMenuItem3.setText("Visualizar todas as vagas");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        jVisualizarTodasVagas.setText("Visualizar todas as vagas");
+        jVisualizarTodasVagas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                jVisualizarTodasVagasActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem3);
+        jMenu2.add(jVisualizarTodasVagas);
 
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Vagas Empreenchidas");
 
-        jMenuItem2.setText("Visualizar");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        jVagasEmpreenchidas.setText("Visualizar");
+        jVagasEmpreenchidas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                jVagasEmpreenchidasActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem2);
+        jMenu3.add(jVagasEmpreenchidas);
 
         jMenuBar1.add(jMenu3);
 
@@ -120,7 +121,7 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menPerfilVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPerfilVisualizarActionPerformed
-        // chamando a tela de perfil do empregador
+
         TelaPerfilEmpregador tela;        
         try {
             tela = new TelaPerfilEmpregador(this.empregador);
@@ -131,33 +132,39 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_menPerfilVisualizarActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // chamando a tela de vagas abertas do empregador
-        TelaVisualizarVagasEmpregador tela = new TelaVisualizarVagasEmpregador(empregador);
-        tela.setVisible(true);
-        desktop.add(tela);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void jVisualizarMinhasVagasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jVisualizarMinhasVagasActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // chamando a aba de candidatos cadastrados
-        TelaCandidatosInscritosEmpregador tela = new TelaCandidatosInscritosEmpregador(empregador);
+        TelaVisualizarVagasEmpregador tela = new TelaVisualizarVagasEmpregador(this.empregador);
         tela.setVisible(true);
         desktop.add(tela);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_jVisualizarMinhasVagasActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // chamando a aba de criar novas vagas
-        TelaCriarNovasVagasEmpregador tela = new TelaCriarNovasVagasEmpregador(empregador);
-        tela.setVisible(true);
-        desktop.add(tela);
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    private void jVagasEmpreenchidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jVagasEmpreenchidasActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        TelaAbaDosCandidatos tela = new TelaAbaDosCandidatos (empregador);
+        TelaCandidatosInscritosEmpregador tela = new TelaCandidatosInscritosEmpregador(this.empregador);
         tela.setVisible(true);
         desktop.add(tela);
+    }//GEN-LAST:event_jVagasEmpreenchidasActionPerformed
+
+    private void jCriarNovaVagasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCriarNovaVagasActionPerformed
+
+        TelaCriarNovasVagasEmpregador tela = new TelaCriarNovasVagasEmpregador(this.empregador);
+        tela.setVisible(true);
+        desktop.add(tela);
+    }//GEN-LAST:event_jCriarNovaVagasActionPerformed
+
+    private void jVisualizarTodasVagasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jVisualizarTodasVagasActionPerformed
+        TelaAbaDosCandidatos tela;
+        try {
+            tela = new TelaAbaDosCandidatos(empregador);
+            tela.setVisible(true);
+            desktop.add(tela);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao abrir a tela: " + e.getMessage());
+        }
+    
        
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_jVisualizarTodasVagasActionPerformed
 
     
     public static void main(String args[]) {
@@ -199,13 +206,13 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
+    private javax.swing.JMenuItem jCriarNovaVagas;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    public static javax.swing.JMenuItem jMenuItem1;
-    public static javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
+    public static javax.swing.JMenuItem jVagasEmpreenchidas;
+    public static javax.swing.JMenuItem jVisualizarMinhasVagas;
+    private javax.swing.JMenuItem jVisualizarTodasVagas;
     private javax.swing.JMenu menPerfil;
     public static javax.swing.JMenuItem menPerfilVisualizar;
     // End of variables declaration//GEN-END:variables

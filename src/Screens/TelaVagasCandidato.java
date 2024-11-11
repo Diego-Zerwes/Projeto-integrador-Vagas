@@ -26,8 +26,13 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
         ConexaoBanco con = new ConexaoBanco();
         if (con.conectar()) {
-            conexao = con.getConnection();
-            pesquisar_vaga();
+            conexao = con.getConnection(); 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    pesquisar_vaga();
+                }
+            }).start();
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }
