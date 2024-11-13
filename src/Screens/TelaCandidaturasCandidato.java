@@ -38,9 +38,7 @@ public class TelaCandidaturasCandidato extends javax.swing.JInternalFrame {
             pst.setInt(1, this.candidato.getIdCandidato());
             rs = pst.executeQuery();
             tblVagasCandidatadas.setModel(DbUtils.resultSetToTableModel(rs));
-//            if(rs.next()) {
-//                JOptionPane.showMessageDialog(null, "Vagas em que você se candidatou!");
-//            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }

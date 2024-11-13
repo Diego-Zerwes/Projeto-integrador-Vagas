@@ -6,7 +6,6 @@ import entities.CandidatoVaga;
 import entities.Vagas;
 import java.sql.*;
 import javax.swing.JOptionPane;
-//a linha abaixo importa recursos da biblioteca rs2xml.jar
 import net.proteanit.sql.DbUtils;
 
 public class TelaVagasCandidato extends javax.swing.JInternalFrame {

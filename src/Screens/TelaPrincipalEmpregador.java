@@ -143,7 +143,7 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
         );
 
         setSize(new java.awt.Dimension(746, 503));
@@ -178,6 +178,7 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         tela.setVisible(true);
         desktop.add(tela);
     }//GEN-LAST:event_jCriarNovaVagasActionPerformed
+
      private void atualizaDash() {
         new Thread() {
             @Override

@@ -14,6 +14,7 @@ import net.proteanit.sql.DbUtils;
 
 
 
+
 public class TelaCandidatosInscritosEmpregador extends javax.swing.JFrame { 
     private Connection conexao = null;
     private PreparedStatement pst = null;
@@ -119,7 +120,7 @@ public class TelaCandidatosInscritosEmpregador extends javax.swing.JFrame {
             @Override
             public void run() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+           }
         });
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables
