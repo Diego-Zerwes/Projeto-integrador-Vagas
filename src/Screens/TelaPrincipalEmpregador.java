@@ -17,6 +17,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,36 +59,10 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         setResizable(false);
 
         desktop.setPreferredSize(new java.awt.Dimension(450, 369));
+        desktop.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPizzaLayout = new javax.swing.GroupLayout(jPizza);
-        jPizza.setLayout(jPizzaLayout);
-        jPizzaLayout.setHorizontalGroup(
-            jPizzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 718, Short.MAX_VALUE)
-        );
-        jPizzaLayout.setVerticalGroup(
-            jPizzaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 452, Short.MAX_VALUE)
-        );
-
-        desktop.setLayer(jPizza, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
-        desktop.setLayout(desktopLayout);
-        desktopLayout.setHorizontalGroup(
-            desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPizza, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        desktopLayout.setVerticalGroup(
-            desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktopLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPizza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
+        jPizza.setLayout(new java.awt.BorderLayout());
+        desktop.add(jPizza, java.awt.BorderLayout.CENTER);
 
         menPerfil.setText("Perfil");
 
@@ -139,11 +114,17 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(desktop, javax.swing.GroupLayout.PREFERRED_SIZE, 691, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(desktop, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(746, 503));
@@ -190,14 +171,18 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
                         pizzaChartData.setValue("Núm de Vagas", listaDashboard.get(1));
                         pizzaChartData.setValue("Núm de Empresas", listaDashboard.get(2));
                         // Gráfico em pizza
-                        JFreeChart pizzaChart = ChartFactory.createPieChart("Distribuição de Dados", pizzaChartData);
+                        JFreeChart pizzaChart = ChartFactory.createPieChart("Dados Gerais", pizzaChartData);
                         PiePlot piePlot = (PiePlot) pizzaChart.getPlot();
                         piePlot.setSectionPaint("Núm Candidatos", Color.BLUE);
                         piePlot.setSectionPaint("Núm de Vagas", Color.GREEN);
                         piePlot.setSectionPaint("Núm de Empresas", Color.RED);
                         ChartPanel chartPanel = new ChartPanel(pizzaChart);
+                        //chartPanel.setPreferredSize(new.java.awt.Dimension(300, 300));
+                        
                         jPizza.removeAll();
+                       // jPizza.setLayout(new BorderLayout());
                         jPizza.add(chartPanel, BorderLayout.CENTER);
+                        
                         jPizza.validate();
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", ERROR_MESSAGE);
