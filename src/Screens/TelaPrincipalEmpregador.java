@@ -14,12 +14,12 @@ import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class TelaPrincipalEmpregador extends javax.swing.JFrame {
 
@@ -161,52 +161,64 @@ public class TelaPrincipalEmpregador extends javax.swing.JFrame {
     }//GEN-LAST:event_jCriarNovaVagasActionPerformed
 
      private void atualizaDash() {
-        new Thread() {
-            @Override
-            public void run() {
-                    try {
-                        ArrayList<Integer> listaDashboard = dashboard();
-                        DefaultPieDataset pizzaChartData = new DefaultPieDataset();
-                        pizzaChartData.setValue("Núm Candidatos", listaDashboard.get(0));
-                        pizzaChartData.setValue("Núm de Vagas", listaDashboard.get(1));
-                        pizzaChartData.setValue("Núm de Empresas", listaDashboard.get(2));
-                        // Gráfico em pizza
-                        JFreeChart pizzaChart = ChartFactory.createPieChart("Dados Gerais", pizzaChartData);
-                        PiePlot piePlot = (PiePlot) pizzaChart.getPlot();
-                        piePlot.setSectionPaint("Núm Candidatos", Color.BLUE);
-                        piePlot.setSectionPaint("Núm de Vagas", Color.GREEN);
-                        piePlot.setSectionPaint("Núm de Empresas", Color.RED);
-                        ChartPanel chartPanel = new ChartPanel(pizzaChart);
-                        //chartPanel.setPreferredSize(new.java.awt.Dimension(300, 300));
-                        
-                        jPizza.removeAll();
-                       // jPizza.setLayout(new BorderLayout());
-                        jPizza.add(chartPanel, BorderLayout.CENTER);
-                        
-                        jPizza.validate();
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", ERROR_MESSAGE);
-                    }
+    new Thread() {
+        @Override
+        public void run() {
+            try {
+                ArrayList<Integer> listaDashboard = dashboard();
+                
+               
+                DefaultCategoryDataset barChartData = new DefaultCategoryDataset();
+                barChartData.addValue(listaDashboard.get(0), "Quantidade", "Núm Vagas");
+                barChartData.addValue(listaDashboard.get(1), "Quantidade", "Núm de Empresas");
+                barChartData.addValue(listaDashboard.get(2), "Quantidade", "Núm de Candidatos");
+
+                JFreeChart barChart = ChartFactory.createBarChart(
+                    "Ex Barras",         
+                    "Dados",             
+                    "Valores",              
+                    barChartData,        
+                    PlotOrientation.VERTICAL,   
+                    true,                
+                    true,                
+                    false                
+                );
+                CategoryPlot barchrt = barChart.getCategoryPlot();
+                barchrt.setRangeGridlinePaint(new Color(140,105,204));
+                CategoryPlot barPlot = (CategoryPlot) barChart.getPlot();
+                //barPlot.getRenderer().setSeriesPaint(0, Color.BLUE);
+                //barPlot.getRenderer().setSeriesPaint(1, Color.GREEN);
+                //barPlot.getRenderer().setSeriesPaint(2, Color.RED);
+
+                ChartPanel chartPanel = new ChartPanel(barChart);
+                jPizza.removeAll();
+                jPizza.add(chartPanel, BorderLayout.CENTER);
+                jPizza.validate();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Ocorreu um erro inesperado:\n" + ex.getMessage(), "ERRO!", ERROR_MESSAGE);
             }
-        }.start();
-    }
+        }
+    }.start();
+}
     public ArrayList<Integer> dashboard() {
         ArrayList<Integer> listaDashboard = new ArrayList<>();
-        String sqlVagas = "SELECT COUNT(*) AS totalVagas FROM Vagas";
-        String sqlEmpresas = "SELECT COUNT(*) AS totalEmpresas FROM Empregador";
-        String sqlCandidatos = "SELECT COUNT(*) AS totalCandidatos FROM candidato";
+        String sqlVagas = "select distinct(select count(*) from Vagas) as totalVagas, "+
+        "(select count(*) from Empregador) as totalEmpresas, "+
+        "(select count(*) from candidato) as totalCandidatos" + 
+        " from contato";
+        
         try {
             PreparedStatement pstVagas = conexao.prepareStatement(sqlVagas);
             ResultSet rsVagas = pstVagas.executeQuery();
             if (rsVagas.next()) {
                 listaDashboard.add(rsVagas.getInt("totalVagas"));
             }
-            PreparedStatement pstEmpresas = conexao.prepareStatement(sqlEmpresas);
+            PreparedStatement pstEmpresas = conexao.prepareStatement(sqlVagas);
             ResultSet rsEmpresas = pstEmpresas.executeQuery();
             if (rsEmpresas.next()) {
                 listaDashboard.add(rsEmpresas.getInt("totalEmpresas"));
             }
-            PreparedStatement pstCandidatos = conexao.prepareStatement(sqlCandidatos);
+            PreparedStatement pstCandidatos = conexao.prepareStatement(sqlVagas);
             ResultSet rsCandidatos = pstCandidatos.executeQuery();
             if (rsCandidatos.next()) {
                 listaDashboard.add(rsCandidatos.getInt("totalCandidatos"));

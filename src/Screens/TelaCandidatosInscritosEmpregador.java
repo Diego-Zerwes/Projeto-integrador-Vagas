@@ -27,12 +27,12 @@ public class TelaCandidatosInscritosEmpregador extends javax.swing.JFrame {
         ConexaoBanco conn = new ConexaoBanco();
         if (conn.conectar()) {
             conexao = conn.getConnection();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    visualizarVagasCandidatadas();
-                }
-            }).start();
+            //new Thread(new Runnable() {
+              //  @Override
+               // public void run() {
+                   visualizarVagasCandidatadas();
+              //  }
+           // }).start();
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
         }
@@ -119,7 +119,7 @@ public class TelaCandidatosInscritosEmpregador extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+               throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
            }
         });
 }
