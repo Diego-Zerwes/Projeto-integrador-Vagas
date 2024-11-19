@@ -5,7 +5,12 @@ import entities.Candidato;
 import entities.CandidatoVaga;
 import entities.Vagas;
 import java.sql.*;
+import java.text.MessageFormat;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import net.proteanit.sql.DbUtils;
 
 public class TelaVagasCandidato extends javax.swing.JInternalFrame {
@@ -25,7 +30,7 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
 
         ConexaoBanco con = new ConexaoBanco();
         if (con.conectar()) {
-            conexao = con.getConnection(); 
+            conexao = con.getConnection();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -97,6 +102,7 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         btnCancelarCandidatura = new javax.swing.JButton();
         btnCandidatar = new javax.swing.JButton();
+        btnImp = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -152,6 +158,13 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
             }
         });
 
+        btnImp.setText("Imprimir");
+        btnImp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImpActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -160,6 +173,8 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
                 .addContainerGap(23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnImp)
+                        .addGap(49, 49, 49)
                         .addComponent(btnCancelarCandidatura)
                         .addGap(23, 23, 23)
                         .addComponent(btnCandidatar))
@@ -184,7 +199,8 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelarCandidatura)
-                    .addComponent(btnCandidatar))
+                    .addComponent(btnCandidatar)
+                    .addComponent(btnImp))
                 .addContainerGap(88, Short.MAX_VALUE))
         );
 
@@ -216,10 +232,24 @@ public class TelaVagasCandidato extends javax.swing.JInternalFrame {
         cancelarCandidatura();
     }//GEN-LAST:event_btnCancelarCandidaturaActionPerformed
 
+    private void btnImpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImpActionPerformed
+        MessageFormat header = new MessageFormat("Testando");
+        MessageFormat footer = new MessageFormat("Página(0,number,Integer)");
+        try {
+            PrintRequestAttributeSet set = new HashPrintRequestAttributeSet();
+            set.add(OrientationRequested.PORTRAIT);
+            tblVagas.print(JTable.PrintMode.FIT_WIDTH, header, footer, true, set, true);
+            JOptionPane.showMessageDialog(null, "\n" + "Impressão concluída");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "\n" + "Falha: " + e);
+        }
+    }//GEN-LAST:event_btnImpActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarCandidatura;
     private javax.swing.JButton btnCandidatar;
+    private javax.swing.JButton btnImp;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblVagas;
